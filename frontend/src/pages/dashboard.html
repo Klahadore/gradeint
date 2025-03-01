@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gradient - Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Raleway:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/dashboard.css">
+    <link rel="stylesheet" href="../styles/sparkles.css">
+    <script src="../lib/pdfjs/pdf.js"></script>
+    <link rel="stylesheet" href="../styles/annotations.css">
+</head>
+<body>
+    <div class="sparkles-container"></div>
+    <nav class="main-nav">
+        <div class="nav-logo">
+            <img src="../assets/gradient_small.png" alt="Gradient Small Logo" class="nav-logo-img">
+        </div>
+        <div class="nav-links">
+            <a href="../index.html">Home</a>
+            <a href="dashboard.html">Dashboard</a>
+        </div>
+    </nav>
+    <div class="dashboard-container">
+        <div class="preview-editor-container">
+            <div class="pdf-preview">
+                <div class="pdf-preview-header">
+                    <div class="pdf-tabs">
+                        <button class="tab-button active" data-tab="edit">Edit Mark-Up</button>
+                        <button class="tab-button" data-tab="preview">Preview PDF</button>
+                    </div>
+                </div>
+                <div class="pdf-preview-content">
+                    <div id="editTab" class="tab-content active">
+                        <div id="pdfContainer">
+                            <canvas id="pdfViewer"></canvas>
+                            <div id="annotationLayer"></div>
+                        </div>
+                        <div class="page-controls">
+                            <button id="prevPage">Previous</button>
+                            <span id="pageInfo">Page <span id="pageNum">1</span> of <span id="pageCount">1</span></span>
+                            <button id="nextPage">Next</button>
+                        </div>
+                    </div>
+                    <div id="previewTab" class="tab-content">
+                        <iframe id="pdfPreview" type="application/pdf"></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="pdf-editor">
+                <div class="editor-header">
+                    <h3>Markup Tools</h3>
+                </div>
+                <div class="annotation-tools">
+                    <div class="tool-item" title="Mark as Correct Answer">
+                        <img src="../assets/correct_answer.png" class="tool-button" data-tool="checkmark" alt="Correct Answer" style="width: 100%;" draggable="true">
+                    </div>
+                    <div class="tool-item" title="Mark as Wrong Answer">
+                        <img src="../assets/wrong_answer.png" class="tool-button" data-tool="x" alt="Wrong Answer" style="width: 100%;" draggable="true">
+                    </div>
+                    <div class="tool-item" title="Add Text Box">
+                        <img src="../assets/text_box.png" class="tool-button" data-tool="text" alt="Text Box" style="width: 100%;" draggable="true">
+                    </div>
+                </div>
+                <div class="editor-actions">
+                    <button id="saveChanges" class="action-button">Save Changes</button>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <h1 class="dashboard-title">Dashboard</h1>
+            <!-- New content will go here -->
+        </div>
+    </div>
+    <script src="../js/sparkles.js"></script>
+    <script src="../js/pdfViewer.js"></script>
+    <script src="../js/annotations.js"></script>
+</body>
+</html>
