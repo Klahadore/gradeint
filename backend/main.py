@@ -16,9 +16,9 @@ app.add_middleware(
 )
 
 # Directory to store PDFs
-UPLOAD_DIR = "/Users/quanhuynh/gradeint-1/uploads/student_work"
-ANSWER_DIR = "/Users/quanhuynh/gradeint-1/uploads/answer_upload"
-MARKED_DIR = "/Users/quanhuynh/gradeint-1/uploads/marked_up"
+UPLOAD_DIR = "../../gradeint-1/uploads/student_work"
+ANSWER_DIR = "../../gradeint-1/uploads/answer_upload"
+MARKED_DIR = "../../gradeint-1/uploads/marked_up"
 
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 

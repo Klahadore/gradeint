@@ -1,125 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gradient - Dashboard</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Raleway:wght@500&family=Quicksand:wght@500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../styles/main.css">
-    <link rel="stylesheet" href="../styles/dashboard.css">
-    <link rel="stylesheet" href="../styles/sparkles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gradient - Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Raleway:wght@500&family=Quicksand:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/main.css">
+  <link rel="stylesheet" href="../styles/dashboard.css">
+  <link rel="stylesheet" href="../styles/sparkles.css">
 </head>
 <body>
-    <div class="sparkles-container"></div>
-    <nav class="main-nav">
-        <div class="nav-logo">
-            <span class="nav-logo-text">Powered by</span>
-            <img src="../assets/gemini_logo.png" alt="Gemini Logo" class="nav-logo-img">
-        </div>
-        <div class="nav-center">
-            <img src="../assets/gradient_large.png" alt="Gradient Large Logo" class="nav-logo-large">
-        </div>
-        <div class="nav-links">
-            <a href="../index.html">Home</a>
-            <a href="dashboard.html">Dashboard</a>
-            <a href="grade-editor.html">Grade Editor</a>
-        </div>
-    </nav>
-    <div class="base-panel">
-        <div class="pane-title">
-            <div class="title-content">
-                <img src="../assets/gradient_small.png" alt="Gradient" class="title-logo">
-                <span class="title-text">Preview</span>
-            </div>
-        </div>
-        <div id="pdfContainer" style="display: none;">
-            <h3>Graded PDF Preview</h3>
-            <iframe id="pdfViewer" style="width:100%; height:600px; border:1px solid #ccc;"></iframe>
-          </div>
+  <div class="sparkles-container"></div>
+  
+  <nav class="main-nav">
+    <div class="nav-logo">
+      <span class="nav-logo-text">Powered by</span>
+      <img src="../assets/gemini_logo.png" alt="Gemini Logo" class="nav-logo-img">
     </div>
-    <div class="right-panel">
-        <div class="pane-title">
-            <div class="title-content">
-                <img src="../assets/gemini_logo_small.png" alt="Gemini" class="title-logo">
-                <span class="title-text">AI Feedback</span>
-            </div>
-        </div>
-        <div class="panel-content">
-            <!-- Content will go here -->
-        </div>
+    <div class="nav-center">
+      <img src="../assets/gradient_large.png" alt="Gradient Large Logo" class="nav-logo-large">
     </div>
-    <div class="panel-buttons">
-        <button class="print-button" onclick="printPDFPreview()">Print</button>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="grade-editor.html">Grade Editor</a>
     </div>
-    <script>
-        // Load PDF when page loads
-        document.addEventListener('DOMContentLoaded', loadPDF);
+  </nav>
 
-        function printPDFPreview() {
-            const iframe = document.querySelector('.pdf-overlay iframe');
-            if (iframe) {
-                const pdfWindow = iframe.contentWindow;
-                try {
-                    pdfWindow.focus();
-                    pdfWindow.print();
-                } catch (e) {
-                    window.open(iframe.src, '_blank');
-                }
-            }
+  <!-- Left panel containing the PDF preview -->
+  <div class="base-panel">
+    <div class="pane-title">
+      <div class="title-content">
+        <img src="../assets/gradient_small.png" alt="Gradient" class="title-logo">
+        <span class="title-text">Preview</span>
+      </div>
+    </div>
+    <div class="pdf-overlay">
+      <!-- The PDF will be embedded here -->
+      <iframe id="pdfViewer" src="" type="application/pdf" width="100%" height="100%"></iframe>
+    </div>
+  </div>
+
+  <!-- Right panel containing AI feedback or other data -->
+  <div class="right-panel">
+    <div class="pane-title">
+      <div class="title-content">
+        <img src="../assets/gemini_logo_small.png" alt="Gemini" class="title-logo">
+        <span class="title-text">AI Feedback</span>
+      </div>
+    </div>
+    <div class="panel-content">
+      <!-- You can place AI feedback here or remove this altogether if not needed -->
+      <p>AI feedback will go here...</p>
+    </div>
+  </div>
+
+  <!-- Panel buttons, e.g. for printing -->
+  <div class="panel-buttons">
+    <button class="print-button" onclick="printPDFPreview()">Print</button>
+  </div>
+
+  <!-- Script to fetch and display the PDF, plus optional print logic -->
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:8000/get-graded-pdf");
+        if (!response.ok) {
+          throw new Error("❌ No graded PDF found or error fetching PDF.");
         }
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        
+        // Set the PDF to the iframe
+        const pdfViewer = document.getElementById("pdfViewer");
+        pdfViewer.src = url;
 
-        async function handleMCQUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                try {
-                    const formData = new FormData();
-                    formData.append('file', file);
+      } catch (error) {
+        console.error("Failed to fetch graded PDF:", error);
+      }
+    });
 
-                    const response = await fetch('http://localhost:8000/upload/mcq_key', {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    const data = await response.json();
-                    if (data.status !== 'success') {
-                        throw new Error(data.detail);
-                    }
-                } catch (error) {
-                    console.error('Error uploading MCQ key:', error);
-                    alert('Failed to upload MCQ key');
-                }
-            }
+    function printPDFPreview() {
+      const iframe = document.querySelector('#pdfViewer');
+      if (iframe) {
+        const pdfWindow = iframe.contentWindow;
+        try {
+          pdfWindow.focus();
+          pdfWindow.print();
+        } catch (e) {
+          window.open(iframe.src, '_blank');
         }
-
-        async function handleFRQUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                try {
-                    const formData = new FormData();
-                    formData.append('file', file);
-
-                    const response = await fetch('http://localhost:8000/upload/frq_rubric', {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    const data = await response.json();
-                    if (data.status !== 'success') {
-                        throw new Error(data.detail);
-                    }
-                } catch (error) {
-                    console.error('Error uploading FRQ rubric:', error);
-                    alert('Failed to upload FRQ rubric');
-                }
-            }
-        }
-
-        // Update input handlers
-        document.getElementById('mcqInput').onchange = handleMCQUpload;
-        document.getElementById('frqInput').onchange = handleFRQUpload;
-    </script>
-    <script src="../js/sparkles.js"></script>
+      }
+    }
+  </script>
+  
+  <script src="../js/sparkles.js"></script>
 </body>
 </html>
