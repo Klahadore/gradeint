@@ -22,6 +22,7 @@
         <div class="nav-links">
             <a href="index.html">Home</a>
             <a href="pages/dashboard.html">Dashboard</a>
+            <a href="pages/grade-editor.html">Grade Editor</a>
         </div>
     </nav>
     <div class="home-container">
@@ -31,7 +32,7 @@
             <img src="assets/hen_hacks_logo.png" alt="HenHacks Logo" class="henhacks-logo">
         </div>
         <div class="button-container">
-            <input type="file" id="pdfInput" accept=".pdf" style="display: none">
+            <input type="file" id="pdfInput" accept=".pdf" style="display: none" onchange="handlePdfUpload(event)">
             <button class="action-button" onclick="document.getElementById('pdfInput').click()">Upload PDF</button>
             <button class="action-button">Check Printer</button>
         </div>
@@ -40,5 +41,20 @@
         <p>&copy; Gradient 2025. All rights reserved.</p>
     </footer>
     <script src="js/sparkles.js"></script>
+    <script>
+        function handlePdfUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // Store the base64 data URL
+                    sessionStorage.setItem('uploadedPdfUrl', e.target.result);
+                    console.log('PDF stored as base64');
+                    window.location.href = 'pages/dashboard.html';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
 </body>
 </html>

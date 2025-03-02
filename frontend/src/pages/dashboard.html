@@ -24,6 +24,7 @@
         <div class="nav-links">
             <a href="../index.html">Home</a>
             <a href="dashboard.html">Dashboard</a>
+            <a href="grade-editor.html">Grade Editor</a>
         </div>
     </nav>
     <div class="base-panel">
@@ -34,7 +35,7 @@
             </div>
         </div>
         <div class="pdf-overlay">
-            <iframe src="../assets/mcq_42.pdf" type="application/pdf" width="100%" height="100%"></iframe>
+            <iframe id="pdfViewer" src="" type="application/pdf" width="100%" height="100%"></iframe>
         </div>
     </div>
     <div class="right-panel">
@@ -56,6 +57,35 @@
         <button class="print-button" onclick="printPDFPreview()">Print</button>
     </div>
     <script>
+        // Load uploaded PDF with error handling
+        function loadPDF() {
+            const uploadedPdfUrl = sessionStorage.getItem('uploadedPdfUrl');
+            const pdfViewer = document.getElementById('pdfViewer');
+            
+            console.log('Attempting to load PDF...');
+
+            if (uploadedPdfUrl && uploadedPdfUrl.startsWith('data:application/pdf')) {
+                try {
+                    pdfViewer.src = uploadedPdfUrl;
+                    console.log('PDF loaded from session storage');
+                } catch (error) {
+                    console.error('Error loading PDF:', error);
+                    pdfViewer.src = '../assets/mcq_42.pdf';
+                }
+            } else {
+                console.log('No uploaded PDF found, loading default');
+                pdfViewer.src = '../assets/mcq_42.pdf';
+            }
+
+            pdfViewer.onload = () => console.log('PDF iframe loaded successfully');
+        }
+
+        // Initialize PDF loading
+        document.addEventListener('DOMContentLoaded', loadPDF);
+        if (document.readyState === 'complete') {
+            loadPDF();
+        }
+
         function printPDFPreview() {
             const iframe = document.querySelector('.pdf-overlay iframe');
             if (iframe) {

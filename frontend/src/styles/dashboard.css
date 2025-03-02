@@ -373,7 +373,7 @@ button:hover {
 }
 
 .base-panel {
-    position: fixed;
+    position: absolute;
     left: 20px;
     top: 80px; /* Changed back to 80px to match right panel */
     width: 50%;
@@ -438,7 +438,7 @@ button:hover {
 
 /* Update right panel to match new styling */
 .right-panel {
-    position: fixed;
+    position: absolute;
     right: 20px;
     top: 80px;
     width: calc(50% - 60px); /* Slightly smaller than left panel to balance layout */
@@ -632,6 +632,17 @@ button:hover {
     font-size: 25px;
     color: black;
     margin-left: -15px; /* Create overlap with logo */
+}
+
+/* Remove these classes entirely */
+.bottom-panel {
+    display: none;
+}
+
+/* Reset body to default behavior */
+body {
+    min-height: 100vh;
+    overflow-y: auto;
 }
 
 
