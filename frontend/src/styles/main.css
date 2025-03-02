@@ -316,3 +316,45 @@ button:hover {
     color: #666;
     margin-top: auto;
 }
+
+/* Example styling for a "prettier" form: */
+
+/* Group each field nicely */
+.form-group {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Poppins', sans-serif; /* unify font */
+    font-size: 16px;                   /* unify base font size */
+    line-height: 1.4;
+    color: #111;                       /* or adjust to your preference */
+  }
+  
+  /* For the label text */
+  .form-group label {
+    margin-bottom: 0.3rem;
+    font-weight: 500;
+  }
+  
+  /* Style the <select> dropdown */
+  .form-group select {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background-color: #fff5e6; /* or your desired background */
+    cursor: pointer;
+    font-family: inherit;      /* use the same Poppins */
+    font-size: inherit;        /* stay at 16px */
+  }
+  
+  /* Style the file inputs */
+  .form-group input[type="file"] {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 8px;
+    background-color: #fff5e6; /* or your desired background */
+    cursor: pointer;
+    font-family: inherit;      /* use the same Poppins */
+    font-size: inherit;        /* stay at 16px */
+  }
+  
