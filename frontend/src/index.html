@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Gradient - Grading Platform</title>
+
   <!-- Fonts & Styles -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -11,8 +12,60 @@
     href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap"
     rel="stylesheet"
   />
+  
+  <!-- Main styles -->
   <link rel="stylesheet" href="styles/main.css" />
+  <!-- Sparkles effect -->
   <link rel="stylesheet" href="styles/sparkles.css" />
+
+  <!-- Optional: Add some extra styling for file inputs and buttons -->
+  <style>
+    /* You can move these into your main.css if you prefer */
+    .file-upload-container {
+      margin-bottom: 1rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .custom-file-label {
+      display: inline-block;
+      background-color: #f4f4f4;
+      padding: 0.5rem 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      text-align: center;
+      transition: background-color 0.2s ease;
+      font-weight: 500;
+      margin-top: 0.3rem;
+    }
+    .custom-file-label:hover {
+      background-color: #ddd;
+    }
+    /* Hide the actual input so we can style the label */
+    .hidden-file-input {
+      display: none;
+    }
+
+    .button-group {
+      margin-top: 1.5rem;
+      display: flex;
+      gap: 1rem;
+    }
+    .button-group button {
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 4px;
+      background-color: #4f86ed;
+      color: #fff;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    .button-group button:hover {
+      background-color: #3b6fc9;
+    }
+  </style>
 </head>
 
 <body>
@@ -56,21 +109,47 @@
     <div class="upload-section">
       <h2>Upload PDFs for Grading</h2>
       <form id="upload-form">
-          <label for="assignmentType">Select Assignment Type:</label>
-          <select name="assignmentType" id="assignmentType">
-            <option value="mcq">Multiple-Choice (MCQ)</option>
-            <option value="frq">Free-Response (FRQ)</option>
-          </select>
-          <br/><br/>
-        <label>Answer Key PDF:
-          <input id="answer" type="file" accept="application/pdf"/>
-        </label>
-        <br/><br/>
-        <label>Worksheets PDF:
-          <input id="worksheet" type="file" accept="application/pdf"/>
-        </label>
-        <br/><br/>
-        <button type="button" id="uploadBtn">Upload &amp; Grade</button>
+
+        <label for="assignmentType">Select Assignment Type:</label>
+        <select name="assignmentType" id="assignmentType">
+          <option value="mcq">Multiple-Choice (MCQ)</option>
+          <option value="frq">Free-Response (FRQ)</option>
+        </select>
+
+        <br /><br />
+
+        <div class="file-upload-container">
+          <label>Answer Key PDF:</label>
+          <label for="answer" class="custom-file-label">
+            Choose File
+          </label>
+          <input
+            id="answer"
+            type="file"
+            accept="application/pdf"
+            class="hidden-file-input"
+          />
+        </div>
+
+        <div class="file-upload-container">
+          <label>Worksheets PDF:</label>
+          <label for="worksheet" class="custom-file-label">
+            Choose File
+          </label>
+          <input
+            id="worksheet"
+            type="file"
+            accept="application/pdf"
+            class="hidden-file-input"
+          />
+        </div>
+
+        <!-- Button group -->
+        <div class="button-group">
+          <button type="button" id="uploadBtn">Upload &amp; Grade</button>
+          <button type="button" id="printerBtn">Connect with Printer</button>
+        </div>
+
       </form>
 
       <p id="status"></p>
@@ -82,8 +161,38 @@
     <p>&copy; Gradient 2025. All rights reserved.</p>
   </footer>
 
+  <!-- Sparkles effect -->
   <script src="js/sparkles.js"></script>
-  <!-- Adjust the code in upload.js for your specific endpoint requirements -->
+  <!-- Your upload logic -->
   <script src="js/upload.js" defer></script>
+
+  <!-- Optional: a small script so label text updates to show chosen file name -->
+  <script>
+    const answerInput = document.getElementById("answer");
+    const worksheetInput = document.getElementById("worksheet");
+
+    answerInput.addEventListener("change", () => {
+      const label = document.querySelector('label[for="answer"]');
+      if (answerInput.files[0]) {
+        label.textContent = answerInput.files[0].name;
+      } else {
+        label.textContent = "Choose File";
+      }
+    });
+
+    worksheetInput.addEventListener("change", () => {
+      const label = document.querySelector('label[for="worksheet"]');
+      if (worksheetInput.files[0]) {
+        label.textContent = worksheetInput.files[0].name;
+      } else {
+        label.textContent = "Choose File";
+      }
+    });
+
+    // Demo function for "Connect with Printer"
+    document.getElementById("printerBtn").addEventListener("click", () => {
+      alert("Printer connection feature coming soon!");
+    });
+  </script>
 </body>
 </html>
