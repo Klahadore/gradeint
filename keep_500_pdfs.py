@@ -15,6 +15,6 @@ def delete_except_random(directory, num_to_keep):
             print(f"Deleted: {file_path}")
 
 # Example usage
-directory_path = "dataset/resized_pngs/"
+directory_path = "dataset/more_resized_pngs/"
 num_files_to_keep = 500
 delete_except_random(directory_path, num_files_to_keep)

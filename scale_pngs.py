@@ -45,9 +45,12 @@ def process_png_directory(input_dir_path: str, output_dir_path: str):
     print(f"Done. Processed {len(png_files)} files to {output_dir_path}")
 
 
+
+
+
 if __name__ == "__main__":
     # img = Image.open("dataset/processed_pngs/frq_10_page_1.png")
     # img = process_raw_png(img)
     # print(img.size)
     # img.show()
-    process_png_directory("dataset/new_data/new_data_pngs/", "dataset/new_data/new_data_resized_pngs/")
+    process_png_directory("dataset/processed_pngs/", "dataset/more_resized_pngs/")
