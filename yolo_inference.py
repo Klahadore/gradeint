@@ -4,14 +4,16 @@ import os
 from dotenv import load_dotenv
 from PIL import Image
 from numpy import square
+from utils import *
 load_dotenv()
 
-custom_configuration = InferenceConfiguration(confidence_threshold=0.09)
+custom_configuration = InferenceConfiguration(confidence_threshold=0.2)
 CLIENT = InferenceHTTPClient(
     api_url="https://detect.roboflow.com",
-    api_key=os.getenv("ROBO_KEY")
+    api_key="vd8vIBbyTOqy6WETpLgy"
 )
-MODEL_ID = "my-first-project-6kwre/2"
+
+MODEL_ID = "my-first-project-6kwre/7"
 
 
 def process_raw_png(img: Image.Image) -> Image.Image:
@@ -47,10 +49,12 @@ def process_raw_png(img: Image.Image) -> Image.Image:
 # takes in multiple page pdf
 
 # runs yolo inference on PIL image, returns coordinates of boxes.
-def inference_on_img(image: Image.Image) -> list:
+def inference_on_img(image: Image.Image, orig_image_size: tuple[int, int]) -> list:
     result = CLIENT.infer(image, model_id=MODEL_ID)
+    orig_predictions = result['predictions']
+    scaled_predictions = scale_predictions_to_resolution(orig_predictions, orig_image_size[1])
 
-    return result['predictions']
+    return scaled_predictions
 
 
 # takes in coordinates, and original pdf, and will return
@@ -64,21 +68,29 @@ def square_original_image(original_image: Image.Image):
 
     return square_image
 
+def extract_image_slices(square_image: Image.Image, predictions: list[dict]) -> list[Image.Image]:
+    sorted_predictions = sorted(predictions, key=lambda pred: pred.get("y", 0))
 
-def draw_boxes_on_square(square_image: Image.Image):
-    pass
+    images = []
+    for pred in sorted_predictions:
+        x1, y1, x2, y2 = prediction_to_box_coordinates(pred, *square_image.size)
+        cropped_image = square_image.crop((x1, y1, x2, y2))
+        images.append(cropped_image)
+    return images
 
 
 
 if __name__ == "__main__":
     from utils import draw_roboflow_predictions
-    img = Image.open("dataset/processed_pngs/frq_10_page_7.png")
+    img = Image.open("dataset/third_data_pngs/ap-english-language-and-composition-course-description - AP Lang Multi_page_16.png")
     processed_img = process_raw_png(img)
     processed_img.show()
     print("processed,", processed_img.size)
     square_image = square_original_image(img)
 
-    predictions = inference_on_img(processed_img)
+    predictions = inference_on_img(processed_img, square_image.size)
     print(predictions)
-    square_image = draw_roboflow_predictions(square_image, predictions)
-    square_image.show()
+   # square_image = draw_roboflow_predictions(square_image, predictions)
+
+    images = extract_image_slices(square_image, predictions)
+    images[0].show()

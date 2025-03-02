@@ -1,19 +1,53 @@
 from PIL import Image, ImageDraw, ImageFont
 import numpy as np
+import copy
+
+
+
+
+def prediction_to_box_coordinates(prediction, image_width, image_height):
+    """
+    Convert a prediction dictionary with center coordinates to corner coordinates
+
+    Args:
+        prediction: Dictionary containing x, y, width, height in pixel values
+        image_width: Width of the target image
+        image_height: Height of the target image
+
+    Returns:
+        Tuple of (x1, y1, x2, y2) coordinates for the box corners
+    """
+    # Get coordinates
+    x_center = prediction.get("x", 0)
+    y_center = prediction.get("y", 0)
+    w = prediction.get("width", 0)
+    h = prediction.get("height", 0)
+
+    # Calculate box coordinates, constrained to image boundaries
+    x1 = int(max(0, x_center - w/2))
+    y1 = int(max(0, y_center - h/2))
+    x2 = int(min(image_width, x_center + w/2))
+    y2 = int(min(image_height, y_center + h/2))
+
+    return x1, y1, x2, y2
 
 def draw_roboflow_predictions(image, predictions_list):
     """
     Draw Roboflow API predictions on a PIL Image using Pillow
 
     Args:
-        image: PIL Image object
+        image: PIL Image object (must be in RGB mode or will be converted)
         predictions_list: List of prediction dictionaries from Roboflow API
 
     Returns:
         PIL Image with predictions drawn on it
     """
-    # Create a copy of the image to draw on
-    image_copy = image.copy()
+    # Create a copy of the image and convert to RGB mode for colored annotations
+    if image.mode != 'RGB':
+        image_copy = image.convert('RGB')
+    else:
+        image_copy = image.copy()
+
     draw = ImageDraw.Draw(image_copy)
 
     # Get image dimensions
@@ -29,49 +63,15 @@ def draw_roboflow_predictions(image, predictions_list):
     np.random.seed(42)
     colors = np.random.randint(0, 255, size=(100, 3), dtype=np.uint8)  # Assume max 100 classes
 
-    # Keep track of classes we've seen
-    class_mapping = {}
-
     # Draw each prediction
     for pred in predictions_list:
-        # Extract information based on common Roboflow formats
-        if "bbox" in pred:
-            # Format with bbox object
-            bbox = pred["bbox"]
-            x_center = bbox.get("x", 0)
-            y_center = bbox.get("y", 0)
-            w = bbox.get("width", 0)
-            h = bbox.get("height", 0)
-        else:
-            # Direct format
-            x_center = pred.get("x", 0)
-            y_center = pred.get("y", 0)
-            w = pred.get("width", 0)
-            h = pred.get("height", 0)
+        # Get box coordinates using the new helper function
+        x1, y1, x2, y2 = prediction_to_box_coordinates(pred, width, height)
 
         # Get confidence and class information
         confidence = pred.get("confidence", 0)
         class_name = pred.get("class", "unknown")
-
-        # Assign a unique ID to each class name if not already assigned
-        if class_name not in class_mapping:
-            class_mapping[class_name] = len(class_mapping)
-        class_id = class_mapping[class_name]
-
-        # Check if coordinates are normalized (0-1) or in pixels
-        # If all values are <= 1, assume normalized
-        if all(val <= 1 for val in [x_center, y_center, w, h]):
-            # Convert normalized coordinates to pixel values
-            x_center *= width
-            y_center *= height
-            w *= width
-            h *= height
-
-        # Calculate box coordinates
-        x1 = int(max(0, x_center - w/2))
-        y1 = int(max(0, y_center - h/2))
-        x2 = int(min(width, x_center + w/2))
-        y2 = int(min(height, y_center + h/2))
+        class_id = pred.get("class_id", 0)
 
         # Get color for this class
         color = tuple(map(int, colors[class_id % len(colors)]))
@@ -97,3 +97,55 @@ def draw_roboflow_predictions(image, predictions_list):
         draw.text((x1, y1 - text_height - 2), label, fill=(255, 255, 255), font=font)
 
     return image_copy
+
+def scale_predictions_to_resolution(predictions_list, target_resolution):
+    """
+    Scale predictions from 1024x1024 model input to a higher resolution square image
+
+    Args:
+        predictions_list: List of prediction dictionaries from Roboflow API
+        target_resolution: Int or tuple of target resolution (assumes square if int)
+
+    Returns:
+        New list of predictions with scaled coordinates
+    """
+    # Handle both int and tuple input for target_resolution
+    if isinstance(target_resolution, int):
+        target_width = target_height = target_resolution
+    else:
+        target_width, target_height = target_resolution
+
+    # Calculate scale factors (from 1024x1024)
+    scale_x = target_width / 1024
+    scale_y = target_height / 1024
+
+    # Create a deep copy of predictions to avoid modifying the original
+    scaled_predictions = copy.deepcopy(predictions_list)
+
+    # Scale each prediction
+    for pred in scaled_predictions:
+        # Scale coordinates
+        pred["x"] = pred.get("x", 0) * scale_x
+        pred["y"] = pred.get("y", 0) * scale_y
+        pred["width"] = pred.get("width", 0) * scale_x
+        pred["height"] = pred.get("height", 0) * scale_y
+
+    return scaled_predictions
+
+# Example usage of the new function:
+"""
+# Get a single prediction
+prediction = {
+    "x": 478.0,
+    "y": 475.5,
+    "width": 436.0,
+    "height": 107.0,
+    "confidence": 0.95,
+    "class": "mcq"
+}
+
+# Get the box coordinates
+img_width, img_height = 1024, 1024
+x1, y1, x2, y2 = prediction_to_box_coordinates(prediction, img_width, img_height)
+print(f"Box coordinates: ({x1}, {y1}) to ({x2}, {y2})")
+"""

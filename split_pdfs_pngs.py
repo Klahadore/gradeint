@@ -44,7 +44,7 @@ def process_pdfs(input_folder, output_folder, dpi=300):
 
 # Example usage
 if __name__ == "__main__":
-    input_folder = "dataset/new_data/new_data_raw/"
-    output_folder = "dataset/new_data/new_data_pngs"
+    input_folder = "dataset/third_data_pdfs"
+    output_folder = "dataset/third_data_pngs"
 
     process_pdfs(input_folder, output_folder)
