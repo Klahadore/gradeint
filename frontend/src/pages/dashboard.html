@@ -50,41 +50,34 @@
         </div>
     </div>
     <div class="panel-buttons">
-        <input type="file" id="mcqInput" accept=".pdf" style="display: none">
-        <input type="file" id="frqInput" accept=".pdf" style="display: none">
-        <button class="split-left" onclick="document.getElementById('mcqInput').click()">Upload MCQ Answer Key</button>
-        <button class="split-right" onclick="document.getElementById('frqInput').click()">Upload FRQ Rubric</button>
         <button class="print-button" onclick="printPDFPreview()">Print</button>
     </div>
     <script>
-        // Load uploaded PDF with error handling
-        function loadPDF() {
-            const uploadedPdfUrl = sessionStorage.getItem('uploadedPdfUrl');
-            const pdfViewer = document.getElementById('pdfViewer');
-            
-            console.log('Attempting to load PDF...');
-
-            if (uploadedPdfUrl && uploadedPdfUrl.startsWith('data:application/pdf')) {
-                try {
-                    pdfViewer.src = uploadedPdfUrl;
-                    console.log('PDF loaded from session storage');
-                } catch (error) {
-                    console.error('Error loading PDF:', error);
-                    pdfViewer.src = '../assets/mcq_42.pdf';
+        async function loadPDF() {
+            try {
+                const pdfPath = localStorage.getItem('pdfPath');
+                if (!pdfPath) {
+                    console.error('No PDF path found');
+                    return;
                 }
-            } else {
-                console.log('No uploaded PDF found, loading default');
-                pdfViewer.src = '../assets/mcq_42.pdf';
+
+                console.log('Loading PDF from:', pdfPath);
+
+                // Use the server endpoint to serve the file instead of direct file:// access
+                const filename = pdfPath.split('/').pop(); // Get just the filename
+                const pdfViewer = document.getElementById('pdfViewer');
+                pdfViewer.src = `http://localhost:8000/api/marked-up/${filename}`;
+
+                // Clear localStorage
+                localStorage.removeItem('currentPDF');
+                localStorage.removeItem('pdfPath');
+            } catch (error) {
+                console.error('Error loading PDF:', error);
             }
-
-            pdfViewer.onload = () => console.log('PDF iframe loaded successfully');
         }
 
-        // Initialize PDF loading
+        // Load PDF when page loads
         document.addEventListener('DOMContentLoaded', loadPDF);
-        if (document.readyState === 'complete') {
-            loadPDF();
-        }
 
         function printPDFPreview() {
             const iframe = document.querySelector('.pdf-overlay iframe');
@@ -94,11 +87,60 @@
                     pdfWindow.focus();
                     pdfWindow.print();
                 } catch (e) {
-                    // Fallback: open PDF in new tab if direct print fails
                     window.open(iframe.src, '_blank');
                 }
             }
         }
+
+        async function handleMCQUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                try {
+                    const formData = new FormData();
+                    formData.append('file', file);
+
+                    const response = await fetch('http://localhost:8000/upload/mcq_key', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const data = await response.json();
+                    if (data.status !== 'success') {
+                        throw new Error(data.detail);
+                    }
+                } catch (error) {
+                    console.error('Error uploading MCQ key:', error);
+                    alert('Failed to upload MCQ key');
+                }
+            }
+        }
+
+        async function handleFRQUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                try {
+                    const formData = new FormData();
+                    formData.append('file', file);
+
+                    const response = await fetch('http://localhost:8000/upload/frq_rubric', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const data = await response.json();
+                    if (data.status !== 'success') {
+                        throw new Error(data.detail);
+                    }
+                } catch (error) {
+                    console.error('Error uploading FRQ rubric:', error);
+                    alert('Failed to upload FRQ rubric');
+                }
+            }
+        }
+
+        // Update input handlers
+        document.getElementById('mcqInput').onchange = handleMCQUpload;
+        document.getElementById('frqInput').onchange = handleFRQUpload;
     </script>
     <script src="../js/sparkles.js"></script>
 </body>
