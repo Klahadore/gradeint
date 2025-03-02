@@ -13,7 +13,11 @@
     <div class="sparkles-container"></div>
     <nav class="main-nav">
         <div class="nav-logo">
-            <img src="assets/gradient_small.png" alt="Gradient Small Logo" class="nav-logo-img">
+            <span class="nav-logo-text">Powered by</span>
+            <img src="assets/gemini_logo.png" alt="Gemini Logo" class="nav-logo-img">
+        </div>
+        <div class="nav-center">
+            <img src="assets/gradient_large.png" alt="Gradient Large Logo" class="nav-logo-large">
         </div>
         <div class="nav-links">
             <a href="index.html">Home</a>
@@ -24,9 +28,11 @@
         <div class="logo-container">
             <img src="assets/gradient_large.png" alt="Gradient Logo" class="home-logo">
             <h1 class="tagline">The All-In-One Grading Platform for Teachers</h1>
+            <img src="assets/hen_hacks_logo.png" alt="HenHacks Logo" class="henhacks-logo">
         </div>
         <div class="button-container">
-            <button class="action-button">Upload PDF</button>
+            <input type="file" id="pdfInput" accept=".pdf" style="display: none">
+            <button class="action-button" onclick="document.getElementById('pdfInput').click()">Upload PDF</button>
             <button class="action-button">Check Printer</button>
         </div>
     </div>

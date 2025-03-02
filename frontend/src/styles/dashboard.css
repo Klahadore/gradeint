@@ -371,3 +371,267 @@ button:hover {
         0 0 45px rgba(52, 211, 153, 0.2),
         inset 0 0 15px rgba(255, 255, 255, 0.6);
 }
+
+.base-panel {
+    position: fixed;
+    left: 20px;
+    top: 80px; /* Changed back to 80px to match right panel */
+    width: 50%;
+    height: calc(100vh - 90px); /* Increased height by reducing subtraction from 100px to 90px */
+    background-color: #daefff;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 
+        0 0 15px rgba(137, 199, 235, 0.5),
+        0 0 25px rgba(137, 199, 235, 0.3),
+        0 0 35px rgba(137, 199, 235, 0.1),
+        inset 0 0 10px rgba(255, 255, 255, 0.4);
+    transition: all 0.3s ease;
+}
+
+.base-panel:hover {
+    box-shadow: 
+        0 0 20px rgba(137, 199, 235, 0.7),
+        0 0 35px rgba(137, 199, 235, 0.5),
+        0 0 45px rgba(137, 199, 235, 0.3),
+        inset 0 0 15px rgba(255, 255, 255, 0.6);
+}
+
+.pane-title {
+    padding: 4px 2px 0 2px; /* Increased top padding, kept other sides minimal */
+    margin-bottom: 0;
+    border-bottom-width: 1px;
+    color: black;
+    font-family: 'Poppins', sans-serif;  /* Changed from Quicksand to Poppins */
+    font-weight: 300;
+    font-size: 24px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px 15px 0 0;
+    background-color: #daefff;
+}
+
+.pdf-overlay {
+    position: relative;
+    margin: 4px 15px 15px 15px; /* Reduced top margin from 8px to 4px */
+    flex: 1;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pdf-overlay iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Remove old left-pane styles */
+.left-pane {
+    display: none;
+}
+
+/* Update right panel to match new styling */
+.right-panel {
+    position: fixed;
+    right: 20px;
+    top: 80px;
+    width: calc(50% - 60px); /* Slightly smaller than left panel to balance layout */
+    height: calc(100vh - 160px); /* Reduced height from -140px to -160px */
+    background-color: white;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.right-panel .pane-title {
+    background-color: #daefff;
+    border-bottom: 1px solid rgba(137, 199, 235, 0.2);
+}
+
+.right-panel .title-text {
+    margin-left: -5px; /* Reduced overlap from -15px to -5px */
+    padding-left: 10px; /* Added padding to move text right */
+}
+
+.panel-content {
+    flex: 1;
+    margin: 15px;
+    padding: 15px;
+    background: white;
+    border-radius: 10px;
+    overflow-y: auto;
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* Remove hover effects from right panel */
+.right-panel:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.panel-buttons {
+    position: fixed;
+    right: 20px;
+    bottom: 20px; /* Changed from 30px to 25px to move buttons down */
+    width: calc(50% - 60px);
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Changed from default to space-between */
+    gap: 1rem; /* Reduced from 1.5rem */
+    background: none;
+    border: none;
+    margin-top: 20px; /* Added margin to create space from panel */
+}
+
+.split-left, .split-right, .print-button {
+    padding: 10px 16px; /* Reduced from 12px 32px */
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    border-radius: 25px;
+    background-color: #fff5e6;
+    background-image: linear-gradient(135deg, #fff9f0 0%, #fff5e6 100%);
+    color: black;
+    font-size: 14px; /* Further reduced font size */
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 
+        0 0 15px rgba(255, 245, 230, 0.5),
+        0 0 25px rgba(255, 245, 230, 0.3),
+        0 0 35px rgba(255, 245, 230, 0.1),
+        inset 0 0 10px rgba(255, 255, 255, 0.4),
+        0 0 0 2px rgba(0, 0, 0, 0.1);
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+    white-space: nowrap; /* Prevent text wrapping */
+    flex: 1; /* Added to make buttons fill available space */
+    min-width: 0; /* Allow buttons to shrink if needed */
+}
+
+.split-left:hover, .split-right:hover {
+    background-image: linear-gradient(135deg, #89c7eb 0%, #75b3d7 100%);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 
+        0 0 20px rgba(137, 199, 235, 0.7),
+        0 0 35px rgba(137, 199, 235, 0.5),
+        0 0 45px rgba(137, 199, 235, 0.3),
+        inset 0 0 15px rgba(255, 255, 255, 0.6);
+}
+
+.print-button {
+    background-color: #34d399;
+    background-image: linear-gradient(135deg, #34d399 0%, #22c55e 100%);
+    box-shadow: 
+        0 0 15px rgba(52, 211, 153, 0.3),
+        0 0 25px rgba(52, 211, 153, 0.2),
+        0 0 35px rgba(52, 211, 153, 0.1),
+        inset 0 0 10px rgba(255, 255, 255, 0.4);
+}
+
+.print-button:hover {
+    background-image: linear-gradient(135deg, #3ee6aa 0%, #25d366 100%);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 
+        0 0 20px rgba(52, 211, 153, 0.5),
+        0 0 35px rgba(52, 211, 153, 0.3),
+        0 0 45px rgba(52, 211, 153, 0.2),
+        inset 0 0 15px rgba(255, 255, 255, 0.6);
+}
+
+.upload-left, .upload-right {
+    display: none;
+}
+
+.panel-buttons button {
+    margin: 0;
+}
+
+.pdf-container iframe {
+    border: none;
+    background-color: white;
+}
+
+.main-nav {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff5e6;
+    padding: 0.25rem 2rem;
+    height: 60px;
+}
+
+.nav-logo {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start; /* Changed from center to flex-start */
+    gap: 8px;
+    transform: translateY(-1px); /* Move up slightly */
+}
+
+.nav-logo-text {
+    font-size: 16px;
+    color: #000000;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    white-space: nowrap;
+    margin-top: 2px; /* Adjust text position */
+    padding-top: 3px; 
+}
+
+.nav-logo-img {
+    height: 25px;
+    width: auto;
+}
+
+.nav-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.nav-logo-large {
+    height: 85px;
+    width: auto;
+    object-fit: contain;
+}
+
+.nav-links {
+    margin-left: auto;
+    display: flex;
+    gap: 2rem;
+}
+
+.title-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 1px; /* Reduced bottom margin */
+}
+
+.title-logo {
+    height: 35px;
+    width: auto;
+}
+
+.title-text {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 300;
+    font-size: 25px;
+    color: black;
+    margin-left: -15px; /* Create overlap with logo */
+}
+
+
