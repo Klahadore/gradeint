@@ -52,6 +52,7 @@ async def grade_pdfs_endpoint(
     with open(worksheet_path, "wb") as f:
         shutil.copyfileobj(worksheet.file, f)
 
+
     pages_per_student = count_pages(answer_path)
     if assignmentType == "mcq":
         output = process_grade_and_create_pdfs(answer_path, worksheet_path, graded_pdf_path, pages_per_student)
