@@ -4,8 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 import shutil
 import os
 
-import mcq_grader
-import frq_grader
+# import mcq_grader
+# import frq_grader
 
 app = FastAPI()
 
@@ -43,14 +43,14 @@ async def grade_pdfs_endpoint(
     with open(worksheet_path, "wb") as f:
         shutil.copyfileobj(worksheet.file, f)
 
-    if assignmentType == "mcq":
-        # 1) Use your "MCQ" code paths
-        # E.g. bounding boxes, bubble detection, etc.
-        pass
-    else:
-        # 2) Use your "FRQ" code paths
-        # E.g. open-ended answer detection, text extraction, LLM scoring, etc.
-        pass
+    # if assignmentType == "mcq":
+    #     # 1) Use your "MCQ" code paths
+    #     # E.g. bounding boxes, bubble detection, etc.
+    #     pass
+    # else:
+    #     # 2) Use your "FRQ" code paths
+    #     # E.g. open-ended answer detection, text extraction, LLM scoring, etc.
+    #     pass
 
     # 📝 Simulate grading (In real use, call `grade_pdfs()` function)
     shutil.copy(worksheet_path, graded_pdf_path)  # Just copying for now
