@@ -1,6 +1,8 @@
 from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 import copy
+import os
+from pypdf import PdfReader, PdfWriter
 
 
 
@@ -132,20 +134,75 @@ def scale_predictions_to_resolution(predictions_list, target_resolution):
 
     return scaled_predictions
 
-# Example usage of the new function:
-"""
-# Get a single prediction
-prediction = {
-    "x": 478.0,
-    "y": 475.5,
-    "width": 436.0,
-    "height": 107.0,
-    "confidence": 0.95,
-    "class": "mcq"
-}
 
-# Get the box coordinates
-img_width, img_height = 1024, 1024
-x1, y1, x2, y2 = prediction_to_box_coordinates(prediction, img_width, img_height)
-print(f"Box coordinates: ({x1}, {y1}) to ({x2}, {y2})")
-"""
+
+
+def extract_first_pages(pdf_path, num_pages, output_dir, output_filename=None):
+    """
+    Extract the first specified number of pages from a PDF, save them to a new file,
+    and remove those pages from the original PDF.
+
+    Args:
+        pdf_path: Path to the original PDF file
+        num_pages: Number of pages to extract from the beginning
+        output_dir: Directory where the extracted pages will be saved
+        output_filename: Optional name for the output file (defaults to the original filename with "_extract" suffix)
+
+    Returns:
+        Tuple containing paths to the extracted PDF and the modified original PDF
+    """
+    # Ensure output directory exists
+    os.makedirs(output_dir, exist_ok=True)
+
+    # Determine output filename if not provided
+    if output_filename is None:
+        base_name = os.path.basename(pdf_path)
+        name_without_ext, ext = os.path.splitext(base_name)
+        output_filename = f"{name_without_ext}_extract{ext}"
+
+    output_path = os.path.join(output_dir, output_filename)
+
+    # Read the original PDF
+    with open(pdf_path, 'rb') as file:
+        pdf_reader = PdfReader(file)
+        total_pages = len(pdf_reader.pages)
+
+        # Check if there are enough pages
+        if num_pages > total_pages:
+            raise ValueError(f"PDF only has {total_pages} pages, but {num_pages} were requested")
+
+        # Create a new PDF with the first N pages
+        extracted_writer = PdfWriter()
+        for page_num in range(num_pages):
+            extracted_writer.add_page(pdf_reader.pages[page_num])
+
+        # Create another PDF with the remaining pages
+        remaining_writer = PdfWriter()
+        for page_num in range(num_pages, total_pages):
+            remaining_writer.add_page(pdf_reader.pages[page_num])
+
+        # Save the extracted pages to the output directory
+        with open(output_path, 'wb') as output_file:
+            extracted_writer.write(output_file)
+
+        # Create a temporary file for the remaining pages
+        temp_path = pdf_path + ".temp"
+        with open(temp_path, 'wb') as temp_file:
+            remaining_writer.write(temp_file)
+
+    # Replace the original file with the remaining pages
+    os.replace(temp_path, pdf_path)
+
+    return output_path, pdf_path
+
+if __name__ == "__main__":
+    pdf_file = "temp_files/test_util/frq_8.pdf"
+    output_directory = "temp_files/test_util/"
+
+
+    extracted_file, modified_original = extract_first_pages(
+        pdf_file,
+        3,
+        output_directory,
+        "first_three_pages.pdf"
+    )
