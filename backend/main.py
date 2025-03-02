@@ -16,7 +16,10 @@ app.add_middleware(
 )
 
 # Directory to store PDFs
-UPLOAD_DIR = "uploaded_pdfs"
+UPLOAD_DIR = "/Users/quanhuynh/gradeint-1/uploads/student_work"
+ANSWER_DIR = "/Users/quanhuynh/gradeint-1/uploads/answer_upload"
+MARKED_DIR = "/Users/quanhuynh/gradeint-1/uploads/marked_up"
+
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 @app.post("/grade-pdfs")
@@ -24,9 +27,9 @@ async def grade_pdfs_endpoint(
     answer: UploadFile = File(...), 
     worksheet: UploadFile = File(...)
 ):
-    answer_path = os.path.join(UPLOAD_DIR, f"answer_{answer.filename}")
+    answer_path = os.path.join(ANSWER_DIR, f"answer_{answer.filename}")
     worksheet_path = os.path.join(UPLOAD_DIR, f"worksheet_{worksheet.filename}")
-    graded_pdf_path = os.path.join(UPLOAD_DIR, "graded.pdf")  # Placeholder for the output file
+    graded_pdf_path = os.path.join(MARKED_DIR, "graded.pdf")  # Placeholder for the output file
 
     # Save Answer Key PDF
     with open(answer_path, "wb") as f:
@@ -44,7 +47,7 @@ async def grade_pdfs_endpoint(
 # **New Endpoint: Serve the Graded PDF**
 @app.get("/get-graded-pdf")
 async def get_graded_pdf():
-    graded_pdf_path = os.path.join(UPLOAD_DIR, "graded.pdf")
+    graded_pdf_path = os.path.join(MARKED_DIR, "graded.pdf")
     
     # Ensure file exists before returning
     if not os.path.exists(graded_pdf_path):

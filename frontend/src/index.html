@@ -1,175 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="styles/sparkles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gradient - Grading Platform</title>
+  <!-- Fonts & Styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="styles/main.css" />
+  <link rel="stylesheet" href="styles/sparkles.css" />
 </head>
+
 <body>
-    <div class="sparkles-container"></div>
-    <nav class="main-nav">
-        <div class="nav-logo">
-            <span class="nav-logo-text">Powered by</span>
-            <img src="assets/gemini_logo.png" alt="Gemini Logo" class="nav-logo-img">
-        </div>
-        <div class="nav-center">
-            <img src="assets/gradient_large.png" alt="Gradient Large Logo" class="nav-logo-large">
-        </div>
-        <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="pages/dashboard.html">Dashboard</a>
-            <a href="pages/grade-editor.html">Grade Editor</a>
-        </div>
-    </nav>
-    <div class="home-container">
-        <div class="logo-container">
-            <img src="assets/gradient_large.png" alt="Gradient Logo" class="home-logo">
-            <h1 class="tagline">The All-In-One Grading Platform for Teachers</h1>
-            <img src="assets/hen_hacks_logo.png" alt="HenHacks Logo" class="henhacks-logo">
-        </div>
-        <div class="button-container">
-            <input type="file" id="pdfInput" accept=".pdf" style="display: none" onchange="handlePdfUpload(event)">
-            <input type="file" id="mcqInput" accept=".pdf" style="display: none" onchange="handleMCQUpload(event)">
-            <input type="file" id="frqInput" accept=".pdf" style="display: none" onchange="handleFRQUpload(event)">
-            <button class="action-button" onclick="document.getElementById('pdfInput').click()">Upload Student Work</button>
-            <button class="action-button">Check Printer</button>
-            <button class="action-button" onclick="document.getElementById('mcqInput').click()">Upload MCQ Answer Key</button>
-            <button class="action-button" onclick="document.getElementById('frqInput').click()">Upload FRQ Rubric</button>
-        </div>
+  <div class="sparkles-container"></div>
+
+  <nav class="main-nav">
+    <div class="nav-logo">
+      <span class="nav-logo-text">Powered by</span>
+      <img src="assets/gemini_logo.png" alt="Gemini Logo" class="nav-logo-img" />
     </div>
-    <footer class="footer">
-        <p>&copy; Gradient 2025. All rights reserved.</p>
-    </footer>
-    <script src="js/sparkles.js"></script>
-    <script>
-        async function handlePdfUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                try {
-                    console.log('Uploading file:', file.name);
-                    const formData = new FormData();
-                    formData.append('file', file);
+    <div class="nav-center">
+      <img
+        src="assets/gradient_large.png"
+        alt="Gradient Large Logo"
+        class="nav-logo-large"
+      />
+    </div>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="pages/dashboard.html">Dashboard</a>
+      <a href="pages/grade-editor.html">Grade Editor</a>
+    </div>
+  </nav>
 
-                    // Update the URL to match server endpoint
-                    const response = await fetch('http://localhost:8000/api/upload/student_work', {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            // Remove Content-Type header to let browser set it with boundary
-                        }
-                    });
+  <div class="home-container">
+    <div class="logo-container">
+      <img
+        src="assets/gradient_large.png"
+        alt="Gradient Logo"
+        class="home-logo"
+      />
+      <h1 class="tagline">The All-In-One Grading Platform for Teachers</h1>
+      <img
+        src="assets/hen_hacks_logo.png"
+        alt="HenHacks Logo"
+        class="henhacks-logo"
+      />
+    </div>
 
-                    console.log('Upload response status:', response.status);
-                    const data = await response.json();
-                    console.log('Server response:', data);
-                    
-                    if (data.status === 'success') {
-                        console.log('Upload successful, redirecting to processing...');
-                        window.location.href = `pages/loading.html?file=${data.filename}`;
-                    } else {
-                        throw new Error(data.detail);
-                    }
-                } catch (error) {
-                    console.error('Error uploading PDF:', error);
-                    alert('Failed to upload PDF: ' + error.message);
-                }
-            }
-        }
+    <!-- Essential Integration Section -->
+    <div class="upload-section">
+      <h2>Upload PDFs for Grading</h2>
+      <form id="upload-form">
+        <label>Answer Key PDF: 
+          <input id="answer" type="file" accept="application/pdf"/>
+        </label>
+        <br/><br/>
+        <label>Worksheets PDF: 
+          <input id="worksheet" type="file" accept="application/pdf"/>
+        </label>
+        <br/><br/>
+        <button type="button" id="uploadBtn">Upload &amp; Grade</button>
+      </form>
 
-        async function handleMCQUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                try {
-                    const formData = new FormData();
-                    formData.append('file', file);
+      <p id="status"></p>
+      <p id="loading" style="display: none;">⏳ Grading in progress, please wait...</p>
+    </div>
+  </div>
 
-                    const response = await fetch('/api/upload/mcq_key', {
-                        method: 'POST',
-                        body: formData
-                    });
+  <footer class="footer">
+    <p>&copy; Gradient 2025. All rights reserved.</p>
+  </footer>
 
-                    const data = await response.json();
-                    if (data.status === 'success') {
-                        console.log('MCQ key uploaded successfully');
-                    } else {
-                        throw new Error(data.detail);
-                    }
-                } catch (error) {
-                    console.error('Error uploading MCQ key:', error);
-                    alert('Failed to upload MCQ key');
-                }
-            }
-        }
-
-        async function handleFRQUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                try {
-                    const formData = new FormData();
-                    formData.append('file', file);
-
-                    const response = await fetch('/api/upload/frq_rubric', {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    const data = await response.json();
-                    if (data.status === 'success') {
-                        console.log('FRQ rubric uploaded successfully');
-                    } else {
-                        throw new Error(data.detail);
-                    }
-                } catch (error) {
-                    console.error('Error uploading FRQ rubric:', error);
-                    alert('Failed to upload FRQ rubric');
-                }
-            }
-        }
-    </script>
+  <script src="js/sparkles.js"></script>
+  <!-- Adjust the code in upload.js for your specific endpoint requirements -->
+  <script src="js/upload.js" defer></script>
 </body>
 </html>
-<!--
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Grader</title>
-    <style>
-        #pdfContainer {
-            display: none; /* Hidden until the PDF is available */
-            margin-top: 20px;
-        }
-        iframe {
-            width: 100%;
-            height: 600px;
-            border: 1px solid #ccc;
-        }
-    </style>
-</head>
-<body>
-
-    <h1>Upload PDFs for Grading</h1>
-
-    <form id="upload-form">
-        <label>Answer Key PDF: <input id="answer" type="file" accept="application/pdf"></label><br>
-        <label>Worksheets PDF: <input id="worksheet" type="file" accept="application/pdf"></label><br>
-        <button type="button" id="uploadBtn">Upload & Grade</button>
-    </form>
-
-    <p id="status"></p>
-    <p id="loading" style="display: none;">⏳ Grading in progress, please wait...</p>
-
-    <div id="pdfContainer">
-        <h2>Graded PDF Preview</h2>
-        <iframe id="pdfViewer"></iframe>
-    </div>
-
-    <script src="upload.js" defer></script>
-
-</body>
-</html> -->
