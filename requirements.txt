@@ -1,0 +1,8 @@
+fastapi==0.104.1
+uvicorn==0.24.0
+python-multipart==0.0.6
+pydantic==2.5.1
+aiofiles==23.2.1
+python-jose==3.3.0
+typing_extensions==4.8.0
+starlette==0.27.0

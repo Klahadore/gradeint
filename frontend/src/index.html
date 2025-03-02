@@ -33,8 +33,12 @@
         </div>
         <div class="button-container">
             <input type="file" id="pdfInput" accept=".pdf" style="display: none" onchange="handlePdfUpload(event)">
-            <button class="action-button" onclick="document.getElementById('pdfInput').click()">Upload PDF</button>
+            <input type="file" id="mcqInput" accept=".pdf" style="display: none" onchange="handleMCQUpload(event)">
+            <input type="file" id="frqInput" accept=".pdf" style="display: none" onchange="handleFRQUpload(event)">
+            <button class="action-button" onclick="document.getElementById('pdfInput').click()">Upload Student Work</button>
             <button class="action-button">Check Printer</button>
+            <button class="action-button" onclick="document.getElementById('mcqInput').click()">Upload MCQ Answer Key</button>
+            <button class="action-button" onclick="document.getElementById('frqInput').click()">Upload FRQ Rubric</button>
         </div>
     </div>
     <footer class="footer">
@@ -42,17 +46,87 @@
     </footer>
     <script src="js/sparkles.js"></script>
     <script>
-        function handlePdfUpload(event) {
+        async function handlePdfUpload(event) {
             const file = event.target.files[0];
             if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    // Store the base64 data URL
-                    sessionStorage.setItem('uploadedPdfUrl', e.target.result);
-                    console.log('PDF stored as base64');
-                    window.location.href = 'pages/dashboard.html';
-                };
-                reader.readAsDataURL(file);
+                try {
+                    console.log('Uploading file:', file.name);
+                    const formData = new FormData();
+                    formData.append('file', file);
+
+                    // Update the URL to match server endpoint
+                    const response = await fetch('http://localhost:8000/api/upload/student_work', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            // Remove Content-Type header to let browser set it with boundary
+                        }
+                    });
+
+                    console.log('Upload response status:', response.status);
+                    const data = await response.json();
+                    console.log('Server response:', data);
+                    
+                    if (data.status === 'success') {
+                        console.log('Upload successful, redirecting to processing...');
+                        window.location.href = `pages/loading.html?file=${data.filename}`;
+                    } else {
+                        throw new Error(data.detail);
+                    }
+                } catch (error) {
+                    console.error('Error uploading PDF:', error);
+                    alert('Failed to upload PDF: ' + error.message);
+                }
+            }
+        }
+
+        async function handleMCQUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                try {
+                    const formData = new FormData();
+                    formData.append('file', file);
+
+                    const response = await fetch('/api/upload/mcq_key', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const data = await response.json();
+                    if (data.status === 'success') {
+                        console.log('MCQ key uploaded successfully');
+                    } else {
+                        throw new Error(data.detail);
+                    }
+                } catch (error) {
+                    console.error('Error uploading MCQ key:', error);
+                    alert('Failed to upload MCQ key');
+                }
+            }
+        }
+
+        async function handleFRQUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                try {
+                    const formData = new FormData();
+                    formData.append('file', file);
+
+                    const response = await fetch('/api/upload/frq_rubric', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const data = await response.json();
+                    if (data.status === 'success') {
+                        console.log('FRQ rubric uploaded successfully');
+                    } else {
+                        throw new Error(data.detail);
+                    }
+                } catch (error) {
+                    console.error('Error uploading FRQ rubric:', error);
+                    alert('Failed to upload FRQ rubric');
+                }
             }
         }
     </script>
