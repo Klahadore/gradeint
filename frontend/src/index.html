@@ -56,6 +56,12 @@
     <div class="upload-section">
       <h2>Upload PDFs for Grading</h2>
       <form id="upload-form">
+          <label for="assignmentType">Select Assignment Type:</label>
+          <select name="assignmentType" id="assignmentType">
+            <option value="mcq">Multiple-Choice (MCQ)</option>
+            <option value="frq">Free-Response (FRQ)</option>
+          </select>
+          <br/><br/>
         <label>Answer Key PDF:
           <input id="answer" type="file" accept="application/pdf"/>
         </label>

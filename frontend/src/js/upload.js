@@ -3,7 +3,8 @@ document.getElementById("uploadBtn").addEventListener("click", async () => {
   
     const answerFile = document.getElementById("answer").files[0];
     const worksheetFile = document.getElementById("worksheet").files[0];
-  
+    const assignmentType = document.getElementById("assignmentType").value; 
+
     if (!answerFile || !worksheetFile) {
       alert("❌ Please select both an answer key and a worksheet PDF.");
       return;
@@ -12,8 +13,10 @@ document.getElementById("uploadBtn").addEventListener("click", async () => {
     console.log(`📂 Selected files: ${answerFile.name}, ${worksheetFile.name}`);
   
     const formData = new FormData();
+    formData.append("assignmentType", assignmentType);
     formData.append("answer", answerFile);
     formData.append("worksheet", worksheetFile);
+    
   
     // Optional: Show some "loading..." text/spinner
     document.getElementById("loading").style.display = "block";
