@@ -550,14 +550,6 @@ def create_graded_worksheets(
                 print(f"\nAnswer {answer_idx+1}:")
                 print(f"  Raw prediction: {bbox}")
 
-                # Use coordinates directly - they're already in absolute pixel values
-                center_x = bbox['x']
-                center_y = bbox['y']
-                width = bbox['width']
-                height = bbox['height']
-
-                print(f"  Center: ({center_x:.1f}, {center_y:.1f}), size: {width:.1f} x {height:.1f}")
-
                 # Convert center coordinates to corner coordinates
                 x1, y1, x2, y2 = prediction_to_box_coordinates(
                     bbox,
@@ -567,9 +559,17 @@ def create_graded_worksheets(
 
                 print(f"  Box corners: ({x1}, {y1}) to ({x2}, {y2})")
 
-                # Use top-left corner for placing marks
-                mark_x = x1
-                mark_y = y1
+                # Calculate a better position for the mark:
+                # Let's place it in the top-left corner of the answer box, with a small offset
+                mark_size = 64  # Size of our check/X images
+                offset = 5  # Small offset to not completely overlap the answer circle
+
+                mark_x = x1 + offset
+                mark_y = y1 + offset
+
+                # Alternatively, place it in the center of the answer box
+                # mark_x = (x1 + x2) // 2 - mark_size // 2
+                # mark_y = (y1 + y2) // 2 - mark_size // 2
 
                 print(f"  Placing mark at: ({mark_x}, {mark_y})")
                 print(f"  Student answer: {student_answer}, Key answer: {key_answer}")
@@ -578,42 +578,56 @@ def create_graded_worksheets(
                 is_correct = (student_answer == key_answer) and (student_answer != "null")
                 print(f"  Is correct: {is_correct}")
 
+                # Adjust mark size based on the box size
+                box_width = x2 - x1
+                box_height = y2 - y1
+                adaptive_mark_size = min(mark_size, box_width // 2, box_height // 2)
+                if adaptive_mark_size < 20:  # Ensure minimum visibility
+                    adaptive_mark_size = 20
+
                 # Use image assets if available, otherwise draw shapes
                 if is_correct and check_img is not None:
-                    # Paste checkmark at the top-left corner of the bounding box
-                    graded_image.paste(check_img, (mark_x, mark_y), check_img)
+                    # Resize the checkmark based on the box size
+                    resized_check = check_img.resize((adaptive_mark_size, adaptive_mark_size),
+                                                     Image.Resampling.LANCZOS)
+                    # Paste checkmark at the calculated position
+                    graded_image.paste(resized_check, (mark_x, mark_y), resized_check)
                 elif not is_correct and x_img is not None:
-                    # Paste X at the top-left corner of the bounding box
-                    graded_image.paste(x_img, (mark_x, mark_y), x_img)
+                    # Resize the X based on the box size
+                    resized_x = x_img.resize((adaptive_mark_size, adaptive_mark_size),
+                                             Image.Resampling.LANCZOS)
+                    # Paste X at the calculated position
+                    graded_image.paste(resized_x, (mark_x, mark_y), resized_x)
                 else:
                     # Fallback to drawing shapes if assets can't be loaded
                     draw = ImageDraw.Draw(graded_image)
-                    mark_size = 64  # Fixed size to match asset size
 
                     if is_correct:
                         # Draw green checkmark
                         color = (0, 200, 0, 255)  # Green with full opacity
+                        line_width = max(3, adaptive_mark_size // 8)
                         draw.line(
                             [
-                                (mark_x, mark_y + mark_size/2),
-                                (mark_x + mark_size/3, mark_y + mark_size),
-                                (mark_x + mark_size, mark_y)
+                                (mark_x, mark_y + adaptive_mark_size/2),
+                                (mark_x + adaptive_mark_size/3, mark_y + adaptive_mark_size),
+                                (mark_x + adaptive_mark_size, mark_y)
                             ],
                             fill=color,
-                            width=max(3, mark_size//8)
+                            width=line_width
                         )
                     else:
                         # Draw red X
                         color = (255, 0, 0, 255)  # Red with full opacity
+                        line_width = max(3, adaptive_mark_size // 8)
                         draw.line(
-                            [(mark_x, mark_y), (mark_x + mark_size, mark_y + mark_size)],
+                            [(mark_x, mark_y), (mark_x + adaptive_mark_size, mark_y + adaptive_mark_size)],
                             fill=color,
-                            width=max(3, mark_size//8)
+                            width=line_width
                         )
                         draw.line(
-                            [(mark_x, mark_y + mark_size), (mark_x + mark_size, mark_y)],
+                            [(mark_x, mark_y + adaptive_mark_size), (mark_x + adaptive_mark_size, mark_y)],
                             fill=color,
-                            width=max(3, mark_size//8)
+                            width=line_width
                         )
 
             # Save the overlay image
@@ -682,7 +696,219 @@ def create_flat_worksheet_folder(
 
     return output_files
 
-# Updated process_and_grade_worksheets to include grading visuals
+import os
+import re
+import pathlib
+from PIL import Image
+from typing import List, Tuple, Optional
+import img2pdf
+
+def natural_sort_key(s):
+    """
+    Sort strings that contain numbers in a human-friendly way.
+    For example: ["page_1.png", "page_10.png", "page_2.png"] -> ["page_1.png", "page_2.png", "page_10.png"]
+    """
+    return [int(text) if text.isdigit() else text.lower() for text in re.split(r'(\d+)', s)]
+
+def combine_images_to_pdf(
+    image_files: List[str],
+    output_pdf_path: str,
+    target_aspect_ratio: float = 0.77,  # US Letter aspect ratio (8.5/11)
+    dpi: int = 300,
+    crop_mode: str = "center"  # "center", "top", or "bottom"
+) -> str:
+    """
+    Combines square PNG images into a single PDF with proper document aspect ratio.
+
+    Args:
+        image_files: List of paths to PNG images
+        output_pdf_path: Path where the output PDF will be saved
+        target_aspect_ratio: Desired width/height ratio (default: US Letter 0.77)
+        dpi: Resolution for the PDF (dots per inch)
+        crop_mode: How to crop the square images ("center", "top", or "bottom")
+
+    Returns:
+        Path to the created PDF file
+    """
+    # Ensure output directory exists
+    output_dir = os.path.dirname(output_pdf_path)
+    if output_dir and not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    # Sort files naturally
+    sorted_files = sorted(image_files, key=natural_sort_key)
+
+    if not sorted_files:
+        raise ValueError("No image files provided")
+
+    print(f"Processing {len(sorted_files)} images...")
+
+    # Create a list to store processed images
+    processed_images = []
+    temp_files = []
+
+    try:
+        # Process each image
+        for i, img_path in enumerate(sorted_files):
+            print(f"Processing image {i+1}/{len(sorted_files)}: {img_path}")
+
+            # Open image
+            with Image.open(img_path) as img:
+                # Check if image is square-ish (allow small differences)
+                width, height = img.size
+
+                # If it's already very close to our target aspect ratio, don't crop
+                current_aspect = width / height
+                if abs(current_aspect - target_aspect_ratio) < 0.05:
+                    print(f"  Image already has suitable aspect ratio ({current_aspect:.2f}), skipping crop")
+                    processed_img = img.copy()
+                else:
+                    # Calculate new dimensions
+                    if current_aspect > target_aspect_ratio:
+                        # Image is too wide, crop width
+                        new_width = int(height * target_aspect_ratio)
+                        new_height = height
+                    else:
+                        # Image is too tall, crop height
+                        new_width = width
+                        new_height = int(width / target_aspect_ratio)
+
+                    # Calculate crop box
+                    if crop_mode == "center":
+                        # Crop equally from both sides/top and bottom
+                        left = (width - new_width) // 2
+                        top = (height - new_height) // 2
+                    elif crop_mode == "top":
+                        # Crop from sides and keep top
+                        left = (width - new_width) // 2
+                        top = 0
+                    elif crop_mode == "bottom":
+                        # Crop from sides and keep bottom
+                        left = (width - new_width) // 2
+                        top = height - new_height
+                    else:
+                        raise ValueError(f"Invalid crop_mode: {crop_mode}")
+
+                    right = left + new_width
+                    bottom = top + new_height
+
+                    # Crop the image
+                    processed_img = img.crop((left, top, right, bottom))
+                    print(f"  Cropped from {width}x{height} to {new_width}x{new_height}")
+
+                # Convert to RGB if needed for PDF compatibility
+                if processed_img.mode == 'RGBA':
+                    # Create a white background
+                    background = Image.new('RGB', processed_img.size, (255, 255, 255))
+                    # Paste the image on the background
+                    background.paste(processed_img, mask=processed_img.split()[3])
+                    processed_img = background
+                elif processed_img.mode != 'RGB':
+                    processed_img = processed_img.convert('RGB')
+
+                # Save to temporary file
+                temp_filename = f"temp_proc_{i}.jpg"
+                temp_filepath = os.path.join(output_dir, temp_filename)
+                processed_img.save(temp_filepath, "JPEG", quality=95, dpi=(dpi, dpi))
+                temp_files.append(temp_filepath)
+                processed_images.append(temp_filepath)
+
+        # Create PDF from processed images using img2pdf for better quality
+        print(f"Creating PDF with {len(processed_images)} images...")
+
+        with open(output_pdf_path, "wb") as f:
+            # Use img2pdf with specified DPI
+            layout_fun = img2pdf.get_layout_fun(lambda pts: (pts[0], pts[1] * (1/target_aspect_ratio)))
+            f.write(img2pdf.convert(processed_images, layout_fun=layout_fun, dpi=dpi))
+
+        print(f"PDF created successfully: {output_pdf_path}")
+        return output_pdf_path
+
+    finally:
+        # Clean up temporary files
+        for temp_file in temp_files:
+            try:
+                if os.path.exists(temp_file):
+                    os.remove(temp_file)
+            except Exception as e:
+                print(f"Warning: Failed to delete temporary file {temp_file}: {e}")
+
+# Alternative version using reportlab if img2pdf is not available
+def combine_images_to_pdf_reportlab(
+    image_files: List[str],
+    output_pdf_path: str,
+    target_aspect_ratio: float = 0.77,
+    dpi: int = 300,
+    crop_mode: str = "center"
+) -> str:
+    """
+    Combines square PNG images into a single PDF using reportlab.
+    """
+    from reportlab.pdfgen import canvas
+    from reportlab.lib.units import inch
+
+    # Sort files naturally
+    sorted_files = sorted(image_files, key=natural_sort_key)
+
+    if not sorted_files:
+        raise ValueError("No image files provided")
+
+    # Get dimensions from first image
+    with Image.open(sorted_files[0]) as first_img:
+        width, height = first_img.size
+
+    # Calculate PDF page size (8.5 x 11 inches by default)
+    page_width = 8.5 * inch
+    page_height = page_width / target_aspect_ratio
+
+    # Create PDF
+    c = canvas.Canvas(output_pdf_path, pagesize=(page_width, page_height))
+
+    for img_path in sorted_files:
+        with Image.open(img_path) as img:
+            # Perform cropping as in the original function
+            width, height = img.size
+
+            # Calculate new dimensions based on target aspect ratio
+            if width / height > target_aspect_ratio:
+                new_width = int(height * target_aspect_ratio)
+                new_height = height
+            else:
+                new_width = width
+                new_height = int(width / target_aspect_ratio)
+
+            # Calculate crop box
+            if crop_mode == "center":
+                left = (width - new_width) // 2
+                top = (height - new_height) // 2
+            elif crop_mode == "top":
+                left = (width - new_width) // 2
+                top = 0
+            elif crop_mode == "bottom":
+                left = (width - new_width) // 2
+                top = height - new_height
+            else:
+                raise ValueError(f"Invalid crop_mode: {crop_mode}")
+
+            right = left + new_width
+            bottom = top + new_height
+
+            # Crop the image
+            processed_img = img.crop((left, top, right, bottom))
+
+            # Save to temporary file
+            temp_filename = f"temp_{os.path.basename(img_path)}"
+            processed_img.save(temp_filename)
+
+            # Draw on canvas
+            c.drawImage(temp_filename, 0, 0, page_width, page_height)
+            c.showPage()
+
+            # Delete temporary file
+            os.remove(temp_filename)
+
+    c.save()
+    return output_pdf_path
 
 
 if __name__ == '__main__':
@@ -783,4 +1009,125 @@ if __name__ == '__main__':
             score_percent = (correct_count / total_count) * 100
             print(f"Student {student_idx+1}: {correct_count}/{total_count} correct ({score_percent:.1f}%)")
 
-    print("\nGrading complete! Check the output directories for results.")
+    # Collect preview images (with grading marks)
+    print("\n--- CREATING PDFs ---")
+    preview_images = []
+    for student_idx in range(len(student_answers)):
+        for page_idx in range(len(student_answers[student_idx])):
+            preview_filename = f"preview_student_{student_idx+1:03d}_page_{page_idx+1:03d}.png"
+            preview_path = os.path.join(graded_dir, preview_filename)
+            if os.path.exists(preview_path):
+                preview_images.append(preview_path)
+
+    # Convert preview images to PDF (these are the composited images with original + overlay)
+    if preview_images:
+        preview_pdf_path = os.path.join(output_dir, "graded_worksheets.pdf")
+        print(f"Creating graded worksheets PDF with {len(preview_images)} pages...")
+        try:
+            pdf_path = combine_images_to_pdf(
+                preview_images,
+                preview_pdf_path,
+                target_aspect_ratio=0.77,  # US Letter
+                dpi=300,
+                crop_mode="center"
+            )
+            print(f"Graded worksheets PDF created: {pdf_path}")
+        except Exception as e:
+            print(f"Error creating graded worksheets PDF: {e}")
+            # Try the reportlab fallback if img2pdf fails
+            try:
+                pdf_path = combine_images_to_pdf_reportlab(
+                    preview_images,
+                    preview_pdf_path,
+                    target_aspect_ratio=0.77,
+                    dpi=300,
+                    crop_mode="center"
+                )
+                print(f"Graded worksheets PDF created with fallback method: {pdf_path}")
+            except Exception as e2:
+                print(f"Fallback method also failed: {e2}")
+
+    # Convert overlay-only images to PDF (just the checkmarks and X's)
+    if graded_paths:
+        overlay_pdf_path = os.path.join(output_dir, "overlay_only.pdf")
+        print(f"Creating overlay-only PDF with {len(graded_paths)} pages...")
+
+        # For transparent overlays, we need to create RGB images with white background
+        overlay_with_bg_paths = []
+        temp_files_to_clean = []
+
+        try:
+            # Create temporary images with white background
+            for i, overlay_path in enumerate(graded_paths):
+                # Open the overlay image (transparent PNG with just marks)
+                with Image.open(overlay_path) as overlay_img:
+                    # Create a new white RGB image
+                    white_bg = Image.new("RGB", overlay_img.size, (255, 255, 255))
+
+                    # Make sure overlay is in RGBA mode to get the alpha channel
+                    if overlay_img.mode != "RGBA":
+                        overlay_rgba = overlay_img.convert("RGBA")
+                    else:
+                        overlay_rgba = overlay_img
+
+                    # Paste the overlay onto the white background using alpha as mask
+                    white_bg.paste(overlay_rgba, (0, 0), overlay_rgba)
+
+                    # Save as temporary file in JPEG format (no transparency)
+                    temp_path = os.path.join(output_dir, f"temp_overlay_{i}.jpg")
+                    white_bg.save(temp_path, "JPEG", quality=95)
+                    overlay_with_bg_paths.append(temp_path)
+                    temp_files_to_clean.append(temp_path)
+
+                    print(f"  Processed overlay {i+1}/{len(graded_paths)}")
+
+            # Create PDF from the overlay images with white background
+            pdf_path = combine_images_to_pdf(
+                overlay_with_bg_paths,
+                overlay_pdf_path,
+                target_aspect_ratio=0.77,  # US Letter
+                dpi=300,
+                crop_mode="center"
+            )
+            print(f"Overlay-only PDF created: {pdf_path}")
+
+        except Exception as e:
+            print(f"Error creating overlay-only PDF: {e}")
+            # Try the reportlab fallback
+            try:
+                # Create new white-background images for reportlab too
+                reportlab_temp_paths = []
+                for i, overlay_path in enumerate(graded_paths):
+                    with Image.open(overlay_path) as overlay_img:
+                        white_bg = Image.new("RGB", overlay_img.size, (255, 255, 255))
+                        if overlay_img.mode != "RGBA":
+                            overlay_rgba = overlay_img.convert("RGBA")
+                        else:
+                            overlay_rgba = overlay_img
+                        white_bg.paste(overlay_rgba, (0, 0), overlay_rgba)
+                        temp_path = os.path.join(output_dir, f"temp_reportlab_{i}.jpg")
+                        white_bg.save(temp_path, "JPEG", quality=95)
+                        reportlab_temp_paths.append(temp_path)
+                        temp_files_to_clean.append(temp_path)
+
+                pdf_path = combine_images_to_pdf_reportlab(
+                    reportlab_temp_paths,
+                    overlay_pdf_path,
+                    target_aspect_ratio=0.77,
+                    dpi=300,
+                    crop_mode="center"
+                )
+                print(f"Overlay-only PDF created with fallback method: {pdf_path}")
+            except Exception as e2:
+                print(f"Fallback method also failed: {e2}")
+
+        finally:
+            # Clean up temporary files
+            for temp_file in temp_files_to_clean:
+                try:
+                    if os.path.exists(temp_file):
+                        os.remove(temp_file)
+                except Exception as e:
+                    print(f"Warning: Could not delete temporary file {temp_file}: {e}")
+
+    print("\nProcessing complete! Check the output directories for results.")
