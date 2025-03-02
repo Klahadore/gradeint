@@ -13,7 +13,7 @@ CLIENT = InferenceHTTPClient(
     api_key="vd8vIBbyTOqy6WETpLgy"
 )
 
-MODEL_ID = "my-first-project-6kwre/7"
+MODEL_ID = "my-first-project-6kwre/8"
 
 
 def process_raw_png(img: Image.Image) -> Image.Image:
