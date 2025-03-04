@@ -7,11 +7,11 @@ The all-in-one grading platform for teachers
 
 
 Todo to get this cleaned up:
-[] All backend code moved to backend
-[] Remove temporary files/directories
-[] Normalize Dependencies 
-[] Normalize and minimize frontend
-[] API server should connect to ML stuff (filename issue RN)
-[] Generate PYProject.toml
-[] Update the readme
-[] Update the DevPost
+1. All backend code moved to backend
+2. Remove temporary files/directories
+3. Normalize Dependencies 
+4. Normalize and minimize frontend
+5. API server should connect to ML stuff (filename issue RN)
+6. Generate PYProject.toml
+7. Update the readme
+8. Update the DevPost
