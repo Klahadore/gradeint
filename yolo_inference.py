@@ -50,6 +50,8 @@ def process_raw_png(img: Image.Image) -> Image.Image:
 
 # runs yolo inference on PIL image, returns coordinates of boxes.
 def inference_on_img(image: Image.Image, orig_image_size: tuple[int, int]) -> list:
+    assert image.size == (1024, 1024)
+
     result = CLIENT.infer(image, model_id=MODEL_ID)
     orig_predictions = result['predictions']
     scaled_predictions = scale_predictions_to_resolution(orig_predictions, orig_image_size[1])

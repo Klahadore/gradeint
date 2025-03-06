@@ -561,7 +561,7 @@ def create_graded_worksheets(
 
                 # Calculate a better position for the mark:
                 # Let's place it in the top-left corner of the answer box, with a small offset
-                mark_size = 64  # Size of our check/X images
+                mark_size = 128  # Size of our check/X images
                 offset = 5  # Small offset to not completely overlap the answer circle
 
                 mark_x = x1 + offset
@@ -1170,10 +1170,10 @@ def process_grade_and_create_pdfs(
 
 if __name__ == '__main__':
     # Set up paths
-    rubric_path = "dataset/raw_pdf_dataset/mcq_89.pdf"
-    student_worksheets_path = "dataset/raw_pdf_dataset/mcq_89.pdf"  # Using same file for testing
-    output_dir = "temp_files/graded_worksheets_output"
-    pages_per_student = 3  # Adjust based on your worksheet structure
+    rubric_path = "studenta/answers.pdf"
+    student_worksheets_path = "studenta/students.pdf"  # Using same file for testing
+    output_dir = "studenta/out/"
+    pages_per_student = 2     # Adjust based on your worksheet structure
     assets_dir = "checkandx"  # Directory containing check.png and x.png assets
 
     # Process the answer key

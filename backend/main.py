@@ -34,7 +34,7 @@ MARKED_DIR = "../uploads/marked_up/"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 @app.post("/grade-pdfs")
-async def grade_pdfs_endpoint(
+def grade_pdfs_endpoint(
     assignmentType: str = Form(...),
     answer: UploadFile = File(...),
     worksheet: UploadFile = File(...)
@@ -69,7 +69,7 @@ async def grade_pdfs_endpoint(
 
 # **New Endpoint: Serve the Graded PDF**
 @app.get("/get-graded-pdf")
-async def get_graded_pdf():
+def get_graded_pdf():
     graded_pdf_path = os.path.join(MARKED_DIR, "graded.pdf")
 
     # Ensure file exists before returning
