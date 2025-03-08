@@ -33,7 +33,6 @@
     <div class="nav-links">
       <a href="index.html">Home</a>
       <a href="pages/dashboard.html">Dashboard</a>
-      <a href="pages/grade-editor.html">Grade Editor</a>
     </div>
   </nav>
 
@@ -54,13 +53,25 @@
 
     <!-- Essential Integration Section -->
     <div class="upload-section">
-      <h2>Upload PDFs for Grading</h2>
       <form id="upload-form">
         <div class="form-group">
           <label for="assignmentType">Select Assignment Type:</label>
           <select name="assignmentType" id="assignmentType">
             <option value="mcq">Multiple-Choice (MCQ)</option>
-            <option value="frq">Free-Response (FRQ)</option>
+            <option value="frq">Free-Response (FRQ) - (Coming Soon)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="studentCount">Number of Students:</label>
+          <select name="studentCount" id="studentCount" class="select-input">
+            <option value="0">0</option>
+            <script>
+              // Generate options from 1 to 100
+              for(let i = 1; i <= 100; i++) {
+                document.write(`<option value="${i}" ${i===1 ? 'selected' : ''}>${i}</option>`);
+              }
+            </script>
           </select>
         </div>
         

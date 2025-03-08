@@ -114,9 +114,10 @@ nav a {
     margin-bottom: 1rem;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start; /* Changed from center to flex-start */
     animation: slideUp 1s ease-out forwards;
     opacity: 0;
+    padding-left: 50px; /* Add padding to the container */
 }
 
 @keyframes slideUp {
@@ -139,16 +140,15 @@ nav a {
 }
 
 .tagline {
-    position: absolute;
-    left: 0;
-    bottom: 25%;
-    width: 100%;
-    text-align: center;
     font-family: 'Poppins', sans-serif;
-    font-size: 24px;
-    font-weight: 300;
-    color: black;
-    z-index: 1;
+    font-size: 1.5rem;
+    text-align: center;
+    color: #333;
+    margin-top: 1rem;
+    align-self: center; /* Center the tagline */
+    transform: none; /* Remove transform */
+    padding: 0; /* Remove padding */
+    margin-left: -20px; /* Add negative margin to move left */
 }
 
 .button-container {
@@ -346,6 +346,25 @@ button:hover {
     font-family: inherit;      /* use the same Poppins */
     font-size: inherit;        /* stay at 16px */
   }
+
+.form-group select.select-input {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background-color: #fff5e6;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    width: 100%;
+    appearance: menulist-button; /* Gives it the native OS appearance */
+    color: #111;
+}
+
+.form-group select.select-input:focus {
+    outline: none;
+    border-color: #89c7eb;
+    box-shadow: 0 0 0 2px rgba(137, 199, 235, 0.2);
+}
   
   /* Style the file inputs */
   .form-group input[type="file"] {
@@ -357,4 +376,21 @@ button:hover {
     font-family: inherit;      /* use the same Poppins */
     font-size: inherit;        /* stay at 16px */
   }
-  
+
+  .form-group input[type="number"] {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background-color: #fff5e6;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    width: 100%;
+}
+
+.form-group input[type="number"]::-webkit-inner-spin-button,
+.form-group input[type="number"]::-webkit-outer-spin-button {
+    opacity: 1;
+    height: 30px;
+    cursor: pointer;
+}

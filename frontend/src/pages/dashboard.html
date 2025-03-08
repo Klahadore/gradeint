@@ -25,7 +25,6 @@
     <div class="nav-links">
       <a href="../index.html">Home</a>
       <a href="dashboard.html">Dashboard</a>
-      <a href="grade-editor.html">Grade Editor</a>
     </div>
   </nav>
 
@@ -69,7 +68,8 @@
 
   <!-- Panel buttons, e.g. for printing -->
   <div class="panel-buttons">
-    <button class="print-button" onclick="printPDFPreview()">Print</button>
+    <button class="print-button" onclick="printMarkUp()">Print Mark Up</button>
+    <button class="print-button" onclick="printOverlay()">Print Overlay</button>
   </div>
 
   <!-- Script to fetch and display the PDF, plus optional print logic -->
@@ -92,7 +92,7 @@
       }
     });
 
-    function printPDFPreview() {
+    function printMarkUp() {
       const iframe = document.querySelector('#pdfViewer');
       if (iframe) {
         const pdfWindow = iframe.contentWindow;
@@ -103,6 +103,11 @@
           window.open(iframe.src, '_blank');
         }
       }
+    }
+
+    function printOverlay() {
+      // Placeholder for future functionality
+      console.log('Print overlay functionality coming soon');
     }
   </script>
   
