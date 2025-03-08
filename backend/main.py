@@ -71,6 +71,23 @@ async def get_graded_pdf():
         }
     )
 
+@app.get("/get-overlay-pdf")
+async def get_overlay_pdf():
+    overlay_pdf_path = os.path.join(MARKED_DIR, "overlay_only.pdf")
+    
+    if not os.path.exists(overlay_pdf_path):
+        raise HTTPException(status_code=404, detail="No overlay PDF available")
+        
+    return FileResponse(
+        overlay_pdf_path,
+        media_type="application/pdf",
+        filename="overlay_only.pdf",
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Content-Disposition": "inline; filename=overlay_only.pdf"
+        }
+    )
+
 @app.get("/")
 def root():
     return {"message": "PDF Grader API is running!"}

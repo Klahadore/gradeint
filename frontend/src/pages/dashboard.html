@@ -101,6 +101,37 @@
       }
     }
     
+    async function printMarkUp() {
+      const pdfViewer = document.getElementById("pdfViewer");
+      // Just trigger print on the current iframe
+      pdfViewer.contentWindow.print();
+    }
+    
+    async function printOverlay() {
+      const pdfViewer = document.getElementById("pdfViewer");
+      
+      try {
+        const response = await fetch("http://127.0.0.1:8000/get-overlay-pdf");
+        if (!response.ok) throw new Error("Failed to fetch overlay PDF");
+        
+        const blob = await response.blob();
+        const pdfUrl = URL.createObjectURL(blob);
+        
+        // Load and print the overlay PDF
+        const overlayViewer = document.createElement('iframe');
+        overlayViewer.style.display = 'none';
+        overlayViewer.src = pdfUrl;
+        document.body.appendChild(overlayViewer);
+        
+        overlayViewer.onload = function() {
+          overlayViewer.contentWindow.print();
+        };
+      } catch (error) {
+        console.error("Error printing overlay:", error);
+        alert("Failed to print overlay. Please try again.");
+      }
+    }
+    
     document.addEventListener('DOMContentLoaded', loadGradedPdf);
   </script>
   
