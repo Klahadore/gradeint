@@ -17,7 +17,7 @@ Gradient takes in two files: an answer key PDF and a student work PDF. These fil
 5. Run ```pip install -r requirements.txt``` to download all packages.
 6. Run ```cd backend``` then ```uvicorn main:app --reload --port 8000```.
 7. Open another terminal and activate conda VM. Run ```cd frontend``` then ```python -m http.server 3000```.
-8. Enter the link http://[::]:3000/ into your browser.
+8. Enter the link ```http://[::]:3000/``` into your browser.
 
 When files are moved around, you might have to change imports on some files. To install inferencesdk, specify the version to 2. something on install.
 
