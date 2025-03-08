@@ -20,10 +20,11 @@ Gradient takes in two files: an answer key PDF and a student work PDF. These fil
      GOOGLE_API_KEY='your_api_key'```
 4. Open the terminal and run ```conda create -n gradient``` to create a VM.
 5. Run ```conda activate gradient``` to activate VM.
-6. Run ```pip install -r requirements.txt``` to download all packages.
-7. Run ```cd backend``` then ```uvicorn main:app --reload --port 8000```.
-8. Open another terminal and activate conda VM. Run ```cd frontend``` then ```python -m http.server 3000```.
-9. Copy the link ```http://[::]:3000/``` into your browser.
+6. Run ```conda install python```
+7. Run ```pip install -r requirements.txt``` to download all packages.
+8. Run ```cd backend``` then ```uvicorn main:app --reload --port 8000```.
+9. Open another terminal and activate conda VM. Run ```cd frontend``` then ```python -m http.server 3000```.
+10. Copy the link ```http://[::]:3000/``` into your browser.
 
 When files are moved around, you might have to change imports on some files. To install inferencesdk, specify the version to 2. something on install.
 
