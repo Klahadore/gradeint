@@ -57,18 +57,7 @@
       </div>
     </div>
     <div class="panel-content">
-      <!-- You can place AI feedback here or remove this altogether if not needed -->
-      <p>
-        Question 9: The correct answer is (A) Supporters of the Fifteenth Amendment. The student incorrectly answered (C).
-
-        Feedback:
-        
-        The student needs to review the context of the 15th Amendment and its relationship to the women's suffrage movement.
-        
-        The 15th Amendment (1870) granted African American men the right to vote. While a significant step towards equality, it excluded women, leading to a division within the women's rights movement.
-        Some women's rights advocates, like Frederick Douglass, supported the 15th Amendment, believing that it was strategically important to prioritize Black male suffrage at that time.
-        Others, including Elizabeth Cady Stanton and Susan B. Anthony, strongly opposed the amendment because it did not include women. They felt betrayed by their former abolitionist allies and argued that women should have been included in the expansion of voting rights.
-        The excerpt reflects the sentiment of those who opposed the 15th Amendment because it failed to address women's suffrage. Phrases like "he has withheld from her rights which are given to the most ignorant and degraded men" clearly express this frustration and sense of injustice.</p>
+      <div id="feedbackContent">Loading feedback...</div>
     </div>
   </div>
 
@@ -132,7 +121,49 @@
       }
     }
     
-    document.addEventListener('DOMContentLoaded', loadGradedPdf);
+    async function loadFeedback() {
+      try {
+        const response = await fetch("http://127.0.0.1:8000/get-feedback");
+        if (!response.ok) throw new Error("Failed to fetch feedback");
+        
+        const feedback = await response.json();
+        const feedbackContent = document.getElementById("feedbackContent");
+        
+        // Create feedback HTML
+        let html = `
+          <h3>Grading Summary</h3>
+          <p>Total Students: ${feedback.summary.total_students}</p>
+          <p>Class Average: ${feedback.summary.average_score.toFixed(1)}%</p>
+          <hr>
+        `;
+        
+        // Add individual student feedback
+        feedback.student_feedback.forEach(student => {
+          html += `
+            <h4>Student ${student.student_number}</h4>
+            <p>Score: ${student.score.percentage.toFixed(1)}% (${student.score.correct}/${student.score.total})</p>
+            ${student.questions.map(q => `
+              <div class="question-feedback">
+                <p>${q.feedback}</p>
+              </div>
+            `).join('')}
+            <hr>
+          `;
+        });
+        
+        feedbackContent.innerHTML = html;
+        
+      } catch (error) {
+        console.error("Error loading feedback:", error);
+        document.getElementById("feedbackContent").innerHTML = 
+          "Failed to load feedback. Please try again.";
+      }
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      loadGradedPdf();
+      loadFeedback();
+    });
   </script>
   
   <script src="../js/sparkles.js"></script>

@@ -6,6 +6,7 @@ import os
 from mcq_grader import process_grade_and_create_pdfs
 import frq_grader
 import pikepdf
+import json
 
 def count_pages(pdf_path):
     with pikepdf.open(pdf_path) as pdf:
@@ -87,6 +88,29 @@ async def get_overlay_pdf():
             "Content-Disposition": "inline; filename=overlay_only.pdf"
         }
     )
+
+@app.get("/get-feedback")
+async def get_feedback():
+    """Return AI feedback for the graded worksheets"""
+    try:
+        feedback_path = os.path.join(MARKED_DIR, "feedback.json")
+        if not os.path.exists(feedback_path):
+            # Return empty feedback structure instead of 404
+            return {
+                "summary": {
+                    "total_students": 0,
+                    "average_score": 0
+                },
+                "student_feedback": []
+            }
+            
+        with open(feedback_path, 'r') as f:
+            feedback = json.load(f)
+            
+        return feedback
+    except Exception as e:
+        print(f"Feedback error: {str(e)}")  # Debug print
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/")
 def root():

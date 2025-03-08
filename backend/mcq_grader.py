@@ -11,6 +11,7 @@ from pdf2image import convert_from_path
 from pydantic import BaseModel, Field
 from typing import List, Dict, Optional, ClassVar
 import copy
+import json
 from yolo_inference import process_raw_png, square_original_image
 # Load API key from environment variables
 load_dotenv()
@@ -1154,6 +1155,41 @@ def process_grade_and_create_pdfs(
                 except Exception as e:
                     print(f"Warning: Could not delete temporary file {temp_file}: {e}")
 
+    # Generate and save feedback
+    feedback = {
+        "summary": {
+            "total_students": len(student_scores),
+            "average_score": sum(s['percentage'] for s in student_scores) / len(student_scores)
+        },
+        "student_feedback": []
+    }
+    
+    for student_idx, student in enumerate(student_answers):
+        student_feedback = {
+            "student_number": student_idx + 1,
+            "questions": [],
+            "score": next(s for s in student_scores if s['student_idx'] == student_idx)
+        }
+        
+        for page_idx, page_answers in enumerate(student):
+            key_page_idx = page_idx % len(answer_choices)
+            key_page = answer_choices[key_page_idx]
+            
+            for q_idx, (student_ans, key_ans) in enumerate(zip(page_answers, key_page)):
+                question_feedback = {
+                    "question": q_idx + 1,
+                    "student_answer": student_ans,
+                    "correct_answer": key_ans,
+                    "feedback": f"Question {q_idx + 1}: {'Correct!' if student_ans == key_ans else f'Incorrect. The correct answer is {key_ans}.'}"
+                }
+                student_feedback["questions"].append(question_feedback)
+                    
+        feedback["student_feedback"].append(student_feedback)
+    
+    # Save feedback to file
+    with open(os.path.join(output_dir, "feedback.json"), 'w') as f:
+        json.dump(feedback, f, indent=2)
+    
     print("\nProcessing complete! Check the output directories for results.")
 
     # Return dictionary of results
@@ -1165,226 +1201,24 @@ def process_grade_and_create_pdfs(
         'flat_dir': flat_dir,
         'student_answers': student_answers,
         'answer_key': answer_choices,
-        'student_scores': student_scores
+        'student_scores': student_scores,
+        'feedback': feedback
     }
 
 if __name__ == '__main__':
     # Set up paths
     rubric_path = "../uploads/answer_upload/answers.pdf"
-    student_worksheets_path = "../uploads/student_work/students.pdf"  # Using same file for testing
+    student_worksheets_path = "../uploads/student_work/students.pdf"
     output_dir = "../uploads/marked_up/"
-    pages_per_student = 2     # Adjust based on your worksheet structure
-    assets_dir = "checkandx"  # Directory containing check.png and x.png assets
+    pages_per_student = 2
+    assets_dir = "checkandx"
 
-    # Process the answer key
-    print("Processing answer key...")
-    answer_choices, prediction_coords = process_answer_key(rubric_path)
-    print(f"Answer key has {len(answer_choices)} pages with answers")
-
-    # Process the student worksheets
-    print(f"Processing student worksheets from {student_worksheets_path}...")
-    collection = WorksheetCollection()
-    worksheets_dir = os.path.join(output_dir, "worksheets")
-    process_worksheets_to_png(
+    # Process everything and print results
+    results = process_grade_and_create_pdfs(
+        rubric_path,
         student_worksheets_path,
-        worksheets_dir,
+        output_dir,
         pages_per_student,
-        dpi=600,
-        collection=collection
-    )
-
-    # Grade the worksheets
-    print("Grading student worksheets...")
-    student_answers, student_coords = grade_student_worksheets(
-        collection,
-        answer_choices,
-        prediction_coords
-    )
-
-    # Create graded overlays with check and X assets
-    print("Creating graded overlays with check and X assets...")
-    graded_dir = os.path.join(output_dir, "graded_overlays")
-    graded_paths = create_graded_worksheets(
-        collection,
-        student_answers,
-        answer_choices,
-        student_coords,
-        graded_dir,
         assets_dir
     )
-
-    # Create flat worksheet structure
-    print("Creating flat worksheet structure...")
-    flat_dir = os.path.join(output_dir, "flat_worksheets")
-    flat_paths = create_flat_worksheet_folder(
-        collection,
-        flat_dir
-    )
-
-    # Print statistics
-    print("\n--- GRADING RESULTS ---")
-    print(f"Number of students: {len(student_answers)}")
-
-    # Print the first few answers from each student
-    for i, student in enumerate(student_answers):
-        if i < 3:  # Limit to first 3 students for brevity
-            print(f"\nStudent {i+1}:")
-            for j, page in enumerate(student):
-                if j < 2:  # Limit to first 2 pages per student
-                    print(f"  Page {j+1}: {page[:5]}...")  # Show first 5 answers
-
-    # Print overlay image paths
-    print("\n--- GENERATED FILES ---")
-    print(f"Total graded overlays: {len(graded_paths)}")
-    if graded_paths:
-        print(f"First few overlay files:")
-        for path in graded_paths[:3]:
-            print(f"  {path}")
-
-    print(f"\nTotal flat worksheet images: {len(flat_paths)}")
-    if flat_paths:
-        print(f"First few worksheet files:")
-        for path in flat_paths[:3]:
-            print(f"  {path}")
-
-    # Calculate scores for each student
-    print("\n--- STUDENT SCORES ---")
-    for student_idx, student in enumerate(student_answers):
-        correct_count = 0
-        total_count = 0
-
-        for page_idx, page_answers in enumerate(student):
-            key_page_idx = page_idx % len(answer_choices)
-            key_page = answer_choices[key_page_idx]
-
-            for ans_idx, (student_ans, key_ans) in enumerate(zip(page_answers, key_page)):
-                if student_ans == key_ans and student_ans != "null":
-                    correct_count += 1
-                total_count += 1
-
-        if total_count > 0:
-            score_percent = (correct_count / total_count) * 100
-            print(f"Student {student_idx+1}: {correct_count}/{total_count} correct ({score_percent:.1f}%)")
-
-    # Collect preview images (with grading marks)
-    print("\n--- CREATING PDFs ---")
-    preview_images = []
-    for student_idx in range(len(student_answers)):
-        for page_idx in range(len(student_answers[student_idx])):
-            preview_filename = f"preview_student_{student_idx+1:03d}_page_{page_idx+1:03d}.png"
-            preview_path = os.path.join(graded_dir, preview_filename)
-            if os.path.exists(preview_path):
-                preview_images.append(preview_path)
-
-    # Convert preview images to PDF (these are the composited images with original + overlay)
-    if preview_images:
-        preview_pdf_path = os.path.join(output_dir, "graded_worksheets.pdf")
-        print(f"Creating graded worksheets PDF with {len(preview_images)} pages...")
-        try:
-            pdf_path = combine_images_to_pdf(
-                preview_images,
-                preview_pdf_path,
-                target_aspect_ratio=0.77,  # US Letter
-                dpi=300,
-                crop_mode="center"
-            )
-            print(f"Graded worksheets PDF created: {pdf_path}")
-        except Exception as e:
-            print(f"Error creating graded worksheets PDF: {e}")
-            # Try the reportlab fallback if img2pdf fails
-            try:
-                pdf_path = combine_images_to_pdf_reportlab(
-                    preview_images,
-                    preview_pdf_path,
-                    target_aspect_ratio=0.77,
-                    dpi=300,
-                    crop_mode="center"
-                )
-                print(f"Graded worksheets PDF created with fallback method: {pdf_path}")
-            except Exception as e2:
-                print(f"Fallback method also failed: {e2}")
-
-    # Convert overlay-only images to PDF (just the checkmarks and X's)
-    if graded_paths:
-        overlay_pdf_path = os.path.join(output_dir, "overlay_only.pdf")
-        print(f"Creating overlay-only PDF with {len(graded_paths)} pages...")
-
-        # For transparent overlays, we need to create RGB images with white background
-        overlay_with_bg_paths = []
-        temp_files_to_clean = []
-
-        try:
-            # Create temporary images with white background
-            for i, overlay_path in enumerate(graded_paths):
-                # Open the overlay image (transparent PNG with just marks)
-                with Image.open(overlay_path) as overlay_img:
-                    # Create a new white RGB image
-                    white_bg = Image.new("RGB", overlay_img.size, (255, 255, 255))
-
-                    # Make sure overlay is in RGBA mode to get the alpha channel
-                    if overlay_img.mode != "RGBA":
-                        overlay_rgba = overlay_img.convert("RGBA")
-                    else:
-                        overlay_rgba = overlay_img
-
-                    # Paste the overlay onto the white background using alpha as mask
-                    white_bg.paste(overlay_rgba, (0, 0), overlay_rgba)
-
-                    # Save as temporary file in JPEG format (no transparency)
-                    temp_path = os.path.join(output_dir, f"temp_overlay_{i}.jpg")
-                    white_bg.save(temp_path, "JPEG", quality=95)
-                    overlay_with_bg_paths.append(temp_path)
-                    temp_files_to_clean.append(temp_path)
-
-                    print(f"  Processed overlay {i+1}/{len(graded_paths)}")
-
-            # Create PDF from the overlay images with white background
-            pdf_path = combine_images_to_pdf(
-                overlay_with_bg_paths,
-                overlay_pdf_path,
-                target_aspect_ratio=0.77,  # US Letter
-                dpi=300,
-                crop_mode="center"
-            )
-            print(f"Overlay-only PDF created: {pdf_path}")
-
-        except Exception as e:
-            print(f"Error creating overlay-only PDF: {e}")
-            # Try the reportlab fallback
-            try:
-                # Create new white-background images for reportlab too
-                reportlab_temp_paths = []
-                for i, overlay_path in enumerate(graded_paths):
-                    with Image.open(overlay_path) as overlay_img:
-                        white_bg = Image.new("RGB", overlay_img.size, (255, 255, 255))
-                        if overlay_img.mode != "RGBA":
-                            overlay_rgba = overlay_img.convert("RGBA")
-                        else:
-                            overlay_rgba = overlay_img
-                        white_bg.paste(overlay_rgba, (0, 0), overlay_rgba)
-                        temp_path = os.path.join(output_dir, f"temp_reportlab_{i}.jpg")
-                        white_bg.save(temp_path, "JPEG", quality=95)
-                        reportlab_temp_paths.append(temp_path)
-                        temp_files_to_clean.append(temp_path)
-
-                pdf_path = combine_images_to_pdf_reportlab(
-                    reportlab_temp_paths,
-                    overlay_pdf_path,
-                    target_aspect_ratio=0.77,
-                    dpi=300,
-                    crop_mode="center"
-                )
-                print(f"Overlay-only PDF created with fallback method: {pdf_path}")
-            except Exception as e2:
-                print(f"Fallback method also failed: {e2}")
-
-        finally:
-            # Clean up temporary files
-            for temp_file in temp_files_to_clean:
-                try:
-                    if os.path.exists(temp_file):
-                        os.remove(temp_file)
-                except Exception as e:
-                    print(f"Warning: Could not delete temporary file {temp_file}: {e}")
-
     print("\nProcessing complete! Check the output directories for results.")
