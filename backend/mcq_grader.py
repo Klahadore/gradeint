@@ -1170,9 +1170,9 @@ def process_grade_and_create_pdfs(
 
 if __name__ == '__main__':
     # Set up paths
-    rubric_path = "studenta/answers.pdf"
-    student_worksheets_path = "studenta/students.pdf"  # Using same file for testing
-    output_dir = "studenta/out/"
+    rubric_path = "../uploads/answer_upload/answers.pdf"
+    student_worksheets_path = "../uploads/student_work/students.pdf"  # Using same file for testing
+    output_dir = "../uploads/marked_up/"
     pages_per_student = 2     # Adjust based on your worksheet structure
     assets_dir = "checkandx"  # Directory containing check.png and x.png assets
 

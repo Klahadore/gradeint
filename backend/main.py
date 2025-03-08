@@ -39,8 +39,8 @@ def grade_pdfs_endpoint(
     answer: UploadFile = File(...),
     worksheet: UploadFile = File(...)
 ):
-    answer_path = os.path.join(ANSWER_DIR, f"answer_{answer.filename}")
-    worksheet_path = os.path.join(UPLOAD_DIR, f"worksheet_{worksheet.filename}")
+    answer_path = os.path.join(ANSWER_DIR, f"answers.pdf")
+    worksheet_path = os.path.join(UPLOAD_DIR, f"students.pdf")
     graded_pdf_path = os.path.join(MARKED_DIR, "graded.pdf")  # Placeholder for the output file
 
 
