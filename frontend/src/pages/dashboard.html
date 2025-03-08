@@ -37,8 +37,14 @@
       </div>
     </div>
     <div class="pdf-overlay">
-      <!-- The PDF will be embedded here -->
-      <iframe id="pdfViewer" src="" type="application/pdf" width="100%" height="100%"></iframe>
+      <div id="loadingPdf">Loading PDF...</div>
+      <iframe 
+        id="pdfViewer" 
+        type="application/pdf"
+        width="100%" 
+        height="100%"
+        style="display: none;"
+      ></iframe>
     </div>
   </div>
 
@@ -74,41 +80,28 @@
 
   <!-- Script to fetch and display the PDF, plus optional print logic -->
   <script>
-    document.addEventListener('DOMContentLoaded', async () => {
+    async function loadGradedPdf() {
+      const pdfViewer = document.getElementById("pdfViewer");
+      const loadingElement = document.getElementById("loadingPdf");
+      
       try {
         const response = await fetch("http://127.0.0.1:8000/get-graded-pdf");
-        if (!response.ok) {
-          throw new Error("❌ No graded PDF found or error fetching PDF.");
-        }
-        const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
+        if (!response.ok) throw new Error("Failed to fetch PDF");
         
-        // Set the PDF to the iframe
-        const pdfViewer = document.getElementById("pdfViewer");
-        pdfViewer.src = url;
-
+        const blob = await response.blob();
+        const pdfUrl = URL.createObjectURL(blob);
+        
+        pdfViewer.src = pdfUrl;
+        pdfViewer.style.display = "block";
+        loadingElement.style.display = "none";
+        
       } catch (error) {
-        console.error("Failed to fetch graded PDF:", error);
-      }
-    });
-
-    function printMarkUp() {
-      const iframe = document.querySelector('#pdfViewer');
-      if (iframe) {
-        const pdfWindow = iframe.contentWindow;
-        try {
-          pdfWindow.focus();
-          pdfWindow.print();
-        } catch (e) {
-          window.open(iframe.src, '_blank');
-        }
+        console.error("Error loading PDF:", error);
+        loadingElement.innerHTML = "Failed to load PDF. Please try again.";
       }
     }
-
-    function printOverlay() {
-      // Placeholder for future functionality
-      console.log('Print overlay functionality coming soon');
-    }
+    
+    document.addEventListener('DOMContentLoaded', loadGradedPdf);
   </script>
   
   <script src="../js/sparkles.js"></script>

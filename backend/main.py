@@ -1,29 +1,26 @@
-from fastapi import FastAPI, File, UploadFile, Form
+from fastapi import FastAPI, File, UploadFile, Form, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 import shutil
 import os
-
-# from mcq_grader import process_grade_and_create_pdfs
-# import frq_grader
-
-# import pikepdf
+from mcq_grader import process_grade_and_create_pdfs
+import frq_grader
+import pikepdf
 
 def count_pages(pdf_path):
     with pikepdf.open(pdf_path) as pdf:
-        return len(pdf.pages)
-
-
+        return len(pdf.pages)  # Added missing parenthesis
 
 app = FastAPI()
 
 # Enable CORS for frontend requests
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Change to ["http://localhost:3000"] for security
+    allow_origins=["*"],  # In production, change to specific origin
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["Content-Disposition", "Content-Type", "Content-Length"],  # Add these headers
 )
 
 # Directory to store PDFs
@@ -41,8 +38,7 @@ def grade_pdfs_endpoint(
 ):
     answer_path = os.path.join(ANSWER_DIR, f"answers.pdf")
     worksheet_path = os.path.join(UPLOAD_DIR, f"students.pdf")
-    graded_pdf_path = os.path.join(MARKED_DIR, "graded.pdf")  # Placeholder for the output file
-
+    output_dir = MARKED_DIR  # Just pass the directory, let mcq_grader handle the rest
 
     # Save Answer Key PDF
     with open(answer_path, "wb") as f:
@@ -52,31 +48,28 @@ def grade_pdfs_endpoint(
     with open(worksheet_path, "wb") as f:
         shutil.copyfileobj(worksheet.file, f)
 
-
-    # pages_per_student = count_pages(answer_path)
-    # if assignmentType == "mcq":
-    #     output = process_grade_and_create_pdfs(answer_path, worksheet_path, graded_pdf_path, pages_per_student)
-
-    # else:
-    #     # 2) Use your "FRQ" code paths
-    #     # E.g. open-ended answer detection, text extraction, LLM scoring, etc.
-    #     pass
-
-    # 📝 Simulate grading (In real use, call `grade_pdfs()` function)
-    # shutil.copy(worksheet_path, graded_pdf_path)  # Just copying for now
+    pages_per_student = count_pages(answer_path)
+    if assignmentType == "mcq":
+        output = process_grade_and_create_pdfs(answer_path, worksheet_path, output_dir, pages_per_student)
 
     return {"message": "Files uploaded successfully", "graded_pdf": "/get-graded-pdf"}
 
-# **New Endpoint: Serve the Graded PDF**
 @app.get("/get-graded-pdf")
-def get_graded_pdf():
-    graded_pdf_path = os.path.join(MARKED_DIR, "graded.pdf")
-
-    # Ensure file exists before returning
+async def get_graded_pdf():
+    graded_pdf_path = os.path.join(MARKED_DIR, "graded_worksheets.pdf")
+    
     if not os.path.exists(graded_pdf_path):
-        return {"error": "No graded PDF available"}
-
-    return FileResponse(graded_pdf_path, media_type="application/pdf", filename="graded.pdf")
+        raise HTTPException(status_code=404, detail="No graded PDF available")
+        
+    return FileResponse(
+        graded_pdf_path,
+        media_type="application/pdf",
+        filename="graded_worksheets.pdf",
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Content-Disposition": "inline; filename=graded_worksheets.pdf"
+        }
+    )
 
 @app.get("/")
 def root():
