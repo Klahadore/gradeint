@@ -10,13 +10,13 @@ Gradient takes in two files: an answer key PDF and a student work PDF. These fil
 
 # Step-By-Step Instructions
 1. Create a .env file containing your Google Gemini API key and your Roboflow API key.
-   - Should be in the form ```ini ROBO_KEY='your_api_key'
+   - Should be in the form ```ROBO_KEY='your_api_key'
      GOOGLE_API_KEY='your_api_key'```
-3. Open the terminal and run ```bash conda create -n gradient ``` to create a VM.
-4. Run ```bash conda activate gradient ``` to activate VM.
-5. Run ```bash pip install -r requirements.txt``` to download all packages.
-6. Run ```bash cd backend``` then ```uvicorn main:app --reload --port 8000```.
-7. Open another terminal and activate conda VM. Run ```bash cd frontend``` then ```python -m http.server 3000```.
+3. Open the terminal and run ```conda create -n gradient ``` to create a VM.
+4. Run ```conda activate gradient ``` to activate VM.
+5. Run ```pip install -r requirements.txt``` to download all packages.
+6. Run ```cd backend``` then ```uvicorn main:app --reload --port 8000```.
+7. Open another terminal and activate conda VM. Run ```cd frontend``` then ```python -m http.server 3000```.
 8. Enter the link http://[::]:3000/ into your browser.
 
 When files are moved around, you might have to change imports on some files. To install inferencesdk, specify the version to 2. something on install.
