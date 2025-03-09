@@ -20,22 +20,10 @@ Gradient takes in two files: an answer key PDF and a student work PDF. These fil
      GOOGLE_API_KEY='your_api_key'```
 4. Open the terminal and run ```conda create -n gradient``` to create a VM.
 5. Run ```conda activate gradient``` to activate VM.
-6. Run ```conda install python```
+6. Run ```conda install python``` (ensure python version is 3.13.2)
 7. Run ```pip install -r requirements.txt``` to download all packages.
 8. Run ```cd backend``` then ```uvicorn main:app --reload --port 8000```.
 9. Open another terminal and activate conda VM. Run ```cd frontend``` then ```python -m http.server 3000```.
 10. Copy the link ```http://[::]:3000/``` into your browser.
 
-When files are moved around, you might have to change imports on some files. To install inferencesdk, specify the version to 2. something on install.
-
-
-
-Todo to get this cleaned up:
-1. All backend code moved to backend
-2. Remove temporary files/directories
-3. Normalize Dependencies 
-4. Normalize and minimize frontend
-5. API server should connect to ML stuff (filename issue RN)
-6. Generate PYProject.toml
-7. Update the readme
-8. Update the DevPost
+Feel free to use the two pdfs in the /example_pdfs folder and download them to your finder if you wish to use those files as the uploads.
