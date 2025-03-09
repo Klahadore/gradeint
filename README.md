@@ -26,4 +26,5 @@ Gradient takes in two files: an answer key PDF and a student work PDF. These fil
 9. Open another terminal and activate conda VM. Run ```cd frontend``` then ```python -m http.server 3000```.
 10. Copy the link ```http://[::]:3000/``` into your browser.
 
+# Note
 Feel free to use the two pdfs in the /example_pdfs folder and download them to your finder if you wish to use those files as the uploads.
