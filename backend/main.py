@@ -53,7 +53,7 @@ def grade_pdfs_endpoint(
     if assignmentType == "mcq":
         output = process_grade_and_create_pdfs(answer_path, worksheet_path, output_dir, pages_per_student)
 
-    return {"message": "Files uploaded successfully", "graded_pdf": "/get-graded-pdf"}
+    return {"message": "Files uploaded successfully"}
 
 @app.get("/get-graded-pdf")
 async def get_graded_pdf():

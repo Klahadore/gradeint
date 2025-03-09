@@ -141,14 +141,17 @@ nav a {
 
 .tagline {
     font-family: 'Poppins', sans-serif;
-    font-size: 1.5rem;
+    font-size: 1.40rem;
     text-align: center;
-    color: #333;
-    margin-top: 1rem;
-    align-self: center; /* Center the tagline */
-    transform: none; /* Remove transform */
-    padding: 0; /* Remove padding */
-    margin-left: -20px; /* Add negative margin to move left */
+    color: #000000;
+    font-weight: 100;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-48.3%);
+    top: 67%;
+    padding: 0;
+    width: 100%;
+    z-index: 1;
 }
 
 .button-container {
@@ -388,9 +391,95 @@ button:hover {
     width: 100%;
 }
 
+.uploadBtn {
+    width: 100%;
+    padding: 12px 32px;
+    border: 2px solid rgba(0, 0, 0, 0.15);
+    border-radius: 25px;
+    background-color: #3b82f6; /* Lighter Blue */
+    background-image: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%); /* Lighter Blue Gradient */
+    color: black; /* Black Text */
+    font-size: 18px;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 
+        0 0 15px rgba(59, 130, 246, 0.3),
+        0 0 25px rgba(59, 130, 246, 0.2),
+        0 0 35px rgba(59, 130, 246, 0.1),
+        inset 0 0 10px rgba(255, 255, 255, 0.4);
+    margin-top: 1rem;
+}
+
+.uploadBtn:hover {
+    background-image: linear-gradient(135deg, #93c5fd 0%, #60a5fa 100%); /* Slightly lighter on hover */
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 
+        0 0 20px rgba(59, 130, 246, 0.5),
+        0 0 35px rgba(59, 130, 246, 0.3),
+        0 0 45px rgba(59, 130, 246, 0.2),
+        inset 0 0 15px rgba(255, 255, 255, 0.6);
+}
+
+
+
 .form-group input[type="number"]::-webkit-inner-spin-button,
 .form-group input[type="number"]::-webkit-outer-spin-button {
     opacity: 1;
     height: 30px;
     cursor: pointer;
+    width: 100%;
+    background-color: #3b82f6;
+    background-image: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+    box-shadow: 
+        0 0 15px rgba(59, 130, 246, 0.3),
+        0 0 25px rgba(59, 130, 246, 0.2),
+        0 0 35px rgba(59, 130, 246, 0.1),
+        inset 0 0 10px rgba(255, 255, 255, 0.4);
+    color: white;
 }
+
+/* Loading Overlay Styles */
+#loadingOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white background */
+    backdrop-filter: blur(5px); /* Apply blur effect */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it's on top of everything */
+  }
+  
+  .loading-content {
+    text-align: center;
+  }
+  
+  .loading-logo {
+    width: 150px; /* Adjust size as needed */
+    height: auto;
+    margin-bottom: 20px;
+  }
+  
+  .loading-indicator {
+    border: 6px solid #f3f3f3; /* Light grey */
+    border-top: 6px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  

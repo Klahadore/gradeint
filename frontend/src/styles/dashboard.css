@@ -3,22 +3,20 @@
     min-height: calc(100vh - 50px);
     display: flex;
     gap: 2rem;
-}
-
-.preview-editor-container {
+  }
+  
+  .preview-editor-container {
     display: flex;
     flex: 0 0 65%;
     background: white;
     border-radius: 10px;
-    box-shadow: 
-        0 0 15px rgba(137, 199, 235, 0.5),
-        0 0 25px rgba(137, 199, 235, 0.3),
-        0 0 35px rgba(137, 199, 235, 0.1),
-        inset 0 0 10px rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 15px rgba(137, 199, 235, 0.5),
+      0 0 25px rgba(137, 199, 235, 0.3), 0 0 35px rgba(137, 199, 235, 0.1),
+      inset 0 0 10px rgba(255, 255, 255, 0.4);
     border: 2px solid rgba(137, 199, 235, 0.4);
-}
-
-.pdf-preview {
+  }
+  
+  .pdf-preview {
     flex: 1;
     background: white;
     border-radius: 0;
@@ -29,24 +27,24 @@
     display: flex;
     flex-direction: column;
     gap: 0;
-}
-
-.pdf-preview-header {
+  }
+  
+  .pdf-preview-header {
     padding: 0;
-    background-color: #daefff;  /* Match navigation bar color */
+    background-color: #daefff; /* Match navigation bar color */
     border-bottom: 1px solid rgba(137, 199, 235, 0.4);
-}
-
-.pdf-preview-content {
+  }
+  
+  .pdf-preview-content {
     padding: 1rem;
     height: calc(100% - 60px); /* Adjusted to only account for header height */
     flex: 1;
     display: flex;
     flex-direction: column;
     position: relative;
-}
-
-#pdfContainer {
+  }
+  
+  #pdfContainer {
     flex: 1;
     position: relative;
     overflow: auto;
@@ -57,38 +55,38 @@
     display: flex;
     justify-content: center;
     align-items: flex-start;
-}
-
-#pdfViewer {
+  }
+  
+  #pdfViewer {
     display: block;
     background: white;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     margin: 0 auto;
     width: 100%;
     height: 100%;
     border: none;
     display: none; /* Will be shown once loaded */
-}
-
-.pdf-preview-title {
-    font-family: 'Raleway', sans-serif;
+  }
+  
+  .pdf-preview-title {
+    font-family: "Raleway", sans-serif;
     font-weight: 700;
     font-size: 20px;
     color: black;
     text-align: center;
-    margin-bottom: 0;  /* Remove bottom margin */
-    padding-left: 0;   /* Remove left padding */
-}
-
-.pdf-preview iframe {
+    margin-bottom: 0; /* Remove bottom margin */
+    padding-left: 0; /* Remove left padding */
+  }
+  
+  .pdf-preview iframe {
     flex: 1;
     width: 100%;
     height: 100%;
     border: none;
     border-radius: 8px;
-}
-
-.pdf-editor {
+  }
+  
+  .pdf-editor {
     flex: 0 0 200px;
     background: white;
     border-radius: 0;
@@ -99,21 +97,21 @@
     border-left: 1px solid rgba(137, 199, 235, 0.4);
     display: flex;
     flex-direction: column;
-}
-
-.pdf-editor-input {
+  }
+  
+  .pdf-editor-input {
     width: 100%;
     height: 100%;
     padding: 0.5rem;
     border: 1px solid rgba(137, 199, 235, 0.4);
     border-radius: 4px;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
     resize: none;
     background-color: rgba(255, 255, 255, 0.8);
     flex: 1;
-}
-
-.container {
+  }
+  
+  .container {
     flex: 1;
     max-width: none;
     height: calc(100vh - 100px);
@@ -123,36 +121,36 @@
     background: white;
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-}
-
-.dashboard-title {
-    font-family: 'Poppins', sans-serif;
+  }
+  
+  .dashboard-title {
+    font-family: "Poppins", sans-serif;
     font-weight: 500;
     font-size: 24px;
     color: black;
     margin-bottom: 1.5rem;
     text-align: center;
-}
-
-button {
+  }
+  
+  button {
     padding: 12px 24px;
     border: 2px solid black;
     border-radius: 25px;
     background-color: #89c7eb;
     color: black;
     font-size: 16px;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
     cursor: pointer;
     transition: all 0.3s ease;
     display: block;
     margin: 0 auto;
-}
-
-button:hover {
+  }
+  
+  button:hover {
     background-color: #75b3d7;
-}
-
-.page-controls {
+  }
+  
+  .page-controls {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -160,30 +158,30 @@ button:hover {
     padding: 1rem;
     background: #f8f9fa;
     border-top: 1px solid rgba(137, 199, 235, 0.4);
-}
-
-.page-controls button {
+  }
+  
+  .page-controls button {
     padding: 8px 16px;
-}
-
-#pageInfo {
-    font-family: 'Poppins', sans-serif;
+  }
+  
+  #pageInfo {
+    font-family: "Poppins", sans-serif;
     color: #4a5568;
-}
-
-.editor-header {
+  }
+  
+  .editor-header {
     padding: 0.5rem 0;
     border-bottom: 1px solid rgba(137, 199, 235, 0.4);
-}
-
-.editor-header h3 {
-    font-family: 'Raleway', sans-serif;
+  }
+  
+  .editor-header h3 {
+    font-family: "Raleway", sans-serif;
     font-size: 16px;
     color: #4a5568;
     margin: 0;
-}
-
-.annotation-tools {
+  }
+  
+  .annotation-tools {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -191,37 +189,37 @@ button:hover {
     gap: 3rem;
     flex: 1;
     height: calc(100% - 120px); /* Make room for save button */
-}
-
-.tool-wrapper {
+  }
+  
+  .tool-wrapper {
     width: 100%;
     padding: 8px;
     border: 2px solid transparent;
     border-radius: 8px;
     transition: all 0.2s ease;
     background: white;
-}
-
-.tool-wrapper:hover {
+  }
+  
+  .tool-wrapper:hover {
     border-color: rgb(255, 255, 255);
     background: #f8faff;
     box-shadow: 0 2px 8px rgb(255, 255, 255);
-}
-
-.tool-item {
+  }
+  
+  .tool-item {
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 0;
     position: relative;
-}
-
-.tool-item:hover {
+  }
+  
+  .tool-item:hover {
     transform: translateY(-2px);
-}
-
-.tool-item:hover::after {
+  }
+  
+  .tool-item:hover::after {
     content: attr(title);
     position: absolute;
     bottom: -25px;
@@ -234,86 +232,86 @@ button:hover {
     font-size: 12px;
     white-space: nowrap;
     z-index: 1000;
-}
-
-.tool-button {
-    width: 150px !important;  /* Slightly smaller size */
+  }
+  
+  .tool-button {
+    width: 150px !important; /* Slightly smaller size */
     height: auto !important;
     display: block;
     object-fit: contain;
     cursor: grab;
     padding: 0;
     margin: 0;
-}
-
-.tool-button img {
+  }
+  
+  .tool-button img {
     width: 400px !important;
     height: auto !important;
     max-height: none;
     max-width: none !important;
     object-fit: contain;
-}
-
-.tool-button:active {
+  }
+  
+  .tool-button:active {
     cursor: grabbing;
-}
-
-.tool-item:hover .tool-button {
+  }
+  
+  .tool-item:hover .tool-button {
     filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
-}
-
-/* Remove any existing borders or backgrounds */
-.tool-wrapper, 
-.tool-button,
-.tool-item {
+  }
+  
+  /* Remove any existing borders or backgrounds */
+  .tool-wrapper,
+    .tool-button,
+    .tool-item {
     background: none !important;
     border: none !important;
     box-shadow: none !important;
     max-width: none !important;
     max-height: none !important;
-}
-
-.tool-button.active {
+  }
+  
+  .tool-button.active {
     border-color: #89c7eb;
     background: rgba(137, 199, 235, 0.1);
     box-shadow: 0 0 10px rgba(137, 199, 235, 0.3);
-}
-
-.pdf-preview-header {
+  }
+  
+  .pdf-preview-header {
     padding: 0;
     background: none;
     border-bottom: 1px solid rgba(137, 199, 235, 0.4);
-}
-
-.pdf-tabs {
+  }
+  
+  .pdf-tabs {
     display: flex;
-    gap: 4px;  /* Added gap between tabs */
+    gap: 4px; /* Added gap between tabs */
     padding: 0 1rem;
     align-items: flex-end;
     height: 40px;
-}
-
-.tab-button {
+  }
+  
+  .tab-button {
     padding: 8px 16px;
     background: #e4e9f0;
     border: 1px solid #dae1e7;
     border-bottom: none;
     border-radius: 8px 8px 0 0;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
     font-size: 14px;
     color: #64748b;
     cursor: pointer;
     transition: all 0.2s ease;
     height: 35px;
-    margin: 0;  /* Reset margin */
+    margin: 0; /* Reset margin */
     position: relative;
-}
-
-.tab-button + .tab-button {
-    margin-left: 0;  /* Remove the negative margin */
-}
-
-.tab-button.active {
+  }
+  
+  .tab-button + .tab-button {
+    margin-left: 0; /* Remove the negative margin */
+  }
+  
+  .tab-button.active {
     background: white;
     color: #2563eb;
     font-weight: 500;
@@ -321,29 +319,29 @@ button:hover {
     z-index: 1;
     border-color: rgba(137, 199, 235, 0.4);
     box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.tab-button:hover:not(.active) {
+  }
+  
+  .tab-button:hover:not(.active) {
     background: #edf2f7;
-}
-
-.tab-content {
+  }
+  
+  .tab-content {
     display: none;
     height: 100%;
-}
-
-.tab-content.active {
+  }
+  
+  .tab-content.active {
     display: flex;
     flex-direction: column;
-}
-
-#pdfPreview {
+  }
+  
+  #pdfPreview {
     width: 100%;
     height: 100%;
     border: none;
-}
-
-.editor-actions {
+  }
+  
+  .editor-actions {
     position: absolute;
     bottom: 1rem;
     left: 0;
@@ -352,31 +350,27 @@ button:hover {
     background: white;
     border-top: 1px solid rgba(137, 199, 235, 0.4);
     margin-top: 0;
-}
-
-.action-button#saveChanges {
+  }
+  
+  .action-button#saveChanges {
     padding: 8px 16px;
     font-size: 14px;
     background-image: linear-gradient(135deg, #34d399 0%, #22c55e 100%);
     border: 2px solid rgba(52, 211, 153, 0.4);
-    box-shadow: 
-        0 0 15px rgba(52, 211, 153, 0.3),
-        0 0 25px rgba(52, 211, 153, 0.2),
-        0 0 35px rgba(52, 211, 153, 0.1),
-        inset 0 0 10px rgba(255, 255, 255, 0.4);
-}
-
-.action-button#saveChanges:hover {
+    box-shadow: 0 0 15px rgba(52, 211, 153, 0.3),
+      0 0 25px rgba(52, 211, 153, 0.2), 0 0 35px rgba(52, 211, 153, 0.1),
+      inset 0 0 10px rgba(255, 255, 255, 0.4);
+  }
+  
+  .action-button#saveChanges:hover {
     background-image: linear-gradient(135deg, #3ee6aa 0%, #25d366 100%);
     transform: translateY(-1px) scale(1.02);
-    box-shadow: 
-        0 0 20px rgba(52, 211, 153, 0.5),
-        0 0 35px rgba(52, 211, 153, 0.3),
-        0 0 45px rgba(52, 211, 153, 0.2),
-        inset 0 0 15px rgba(255, 255, 255, 0.6);
-}
-
-.base-panel {
+    box-shadow: 0 0 20px rgba(52, 211, 153, 0.5),
+      0 0 35px rgba(52, 211, 153, 0.3), 0 0 45px rgba(52, 211, 153, 0.2),
+      inset 0 0 15px rgba(255, 255, 255, 0.6);
+  }
+  
+  .base-panel {
     position: absolute;
     left: 20px;
     top: 80px; /* Changed back to 80px to match right panel */
@@ -386,37 +380,33 @@ button:hover {
     border-radius: 15px;
     display: flex;
     flex-direction: column;
-    box-shadow: 
-        0 0 15px rgba(137, 199, 235, 0.5),
-        0 0 25px rgba(137, 199, 235, 0.3),
-        0 0 35px rgba(137, 199, 235, 0.1),
-        inset 0 0 10px rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 15px rgba(137, 199, 235, 0.5),
+      0 0 25px rgba(137, 199, 235, 0.3), 0 0 35px rgba(137, 199, 235, 0.1),
+      inset 0 0 10px rgba(255, 255, 255, 0.4);
     transition: all 0.3s ease;
-}
-
-.base-panel:hover {
-    box-shadow: 
-        0 0 20px rgba(137, 199, 235, 0.7),
-        0 0 35px rgba(137, 199, 235, 0.5),
-        0 0 45px rgba(137, 199, 235, 0.3),
-        inset 0 0 15px rgba(255, 255, 255, 0.6);
-}
-
-.pane-title {
+  }
+  
+  .base-panel:hover {
+    box-shadow: 0 0 20px rgba(137, 199, 235, 0.7),
+      0 0 35px rgba(137, 199, 235, 0.5), 0 0 45px rgba(137, 199, 235, 0.3),
+      inset 0 0 15px rgba(255, 255, 255, 0.6);
+  }
+  
+  .pane-title {
     padding: 4px 2px 0 2px; /* Increased top padding, kept other sides minimal */
     margin-bottom: 0;
     border-bottom-width: 1px;
     color: black;
-    font-family: 'Poppins', sans-serif;  /* Changed from Quicksand to Poppins */
+    font-family: "Poppins", sans-serif; /* Changed from Quicksand to Poppins */
     font-weight: 300;
     font-size: 24px;
     text-align: center;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 15px 15px 0 0;
     background-color: #daefff;
-}
-
-.pdf-overlay {
+  }
+  
+  .pdf-overlay {
     position: relative;
     margin: 4px 15px 15px 15px; /* Reduced top margin from 8px to 4px */
     flex: 1;
@@ -424,9 +414,9 @@ button:hover {
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.pdf-overlay iframe {
+  }
+  
+  .pdf-overlay iframe {
     position: absolute;
     top: 0;
     left: 0;
@@ -434,24 +424,24 @@ button:hover {
     height: 100%;
     border: none;
     display: none;
-}
-
-#loadingPdf {
+  }
+  
+  #loadingPdf {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
     color: #666;
-}
-
-/* Remove old left-pane styles */
-.left-pane {
+  }
+  
+  /* Remove old left-pane styles */
+  .left-pane {
     display: none;
-}
-
-/* Update right panel to match new styling */
-.right-panel {
+  }
+  
+  /* Update right panel to match new styling */
+  .right-panel {
     position: absolute;
     right: 20px;
     top: 80px;
@@ -463,36 +453,36 @@ button:hover {
     flex-direction: column;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
-}
-
-.right-panel .pane-title {
+  }
+  
+  .right-panel .pane-title {
     background-color: #daefff;
     border-bottom: 1px solid rgba(137, 199, 235, 0.2);
-}
-
-.right-panel .title-text {
+  }
+  
+  .right-panel .title-text {
     margin-left: -5px; /* Reduced overlap from -15px to -5px */
     padding-left: 10px; /* Added padding to move text right */
-}
-
-.panel-content {
+  }
+  
+  .panel-content {
     flex: 1;
     margin: 15px;
     padding: 15px;
     background: white;
     border-radius: 10px;
     overflow-y: auto;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
     line-height: 1.6;
     color: #333;
-}
-
-/* Remove hover effects from right panel */
-.right-panel:hover {
+  }
+  
+  /* Remove hover effects from right panel */
+  .right-panel:hover {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.panel-buttons {
+  }
+  
+  .panel-buttons {
     position: fixed;
     right: 20px;
     bottom: 20px; /* Changed from 30px to 25px to move buttons down */
@@ -505,9 +495,11 @@ button:hover {
     background: none;
     border: none;
     margin-top: 20px; /* Added margin to create space from panel */
-}
-
-.split-left, .split-right, .print-button {
+  }
+  
+  .split-left,
+    .split-right,
+    .print-button {
     padding: 10px 16px; /* Reduced from 12px 32px */
     border: 2px solid rgba(0, 0, 0, 0.2);
     border-radius: 25px;
@@ -515,67 +507,42 @@ button:hover {
     background-image: linear-gradient(135deg, #fff9f0 0%, #fff5e6 100%);
     color: black;
     font-size: 14px; /* Further reduced font size */
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 
-        0 0 15px rgba(255, 245, 230, 0.5),
-        0 0 25px rgba(255, 245, 230, 0.3),
-        0 0 35px rgba(255, 245, 230, 0.1),
-        inset 0 0 10px rgba(255, 255, 255, 0.4),
-        0 0 0 2px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 15px rgba(255, 245, 230, 0.5),
+      0 0 25px rgba(255, 245, 230, 0.3), 0 0 35px rgba(255, 245, 230, 0.1),
+      inset 0 0 10px rgba(255, 255, 255, 0.4), 0 0 0 2px rgba(0, 0, 0, 0.1);
     text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
     white-space: nowrap; /* Prevent text wrapping */
     flex: 1; /* Added to make buttons fill available space */
     min-width: 0; /* Allow buttons to shrink if needed */
-}
-
-.split-left:hover, .split-right:hover {
+  }
+  
+  .split-left:hover,
+    .split-right:hover {
     background-image: linear-gradient(135deg, #89c7eb 0%, #75b3d7 100%);
     transform: translateY(-2px) scale(1.02);
-    box-shadow: 
-        0 0 20px rgba(137, 199, 235, 0.7),
-        0 0 35px rgba(137, 199, 235, 0.5),
-        0 0 45px rgba(137, 199, 235, 0.3),
-        inset 0 0 15px rgba(255, 255, 255, 0.6);
-}
-
-.print-button {
-    background-color: #34d399;
-    background-image: linear-gradient(135deg, #34d399 0%, #22c55e 100%);
-    box-shadow: 
-        0 0 15px rgba(52, 211, 153, 0.3),
-        0 0 25px rgba(52, 211, 153, 0.2),
-        0 0 35px rgba(52, 211, 153, 0.1),
-        inset 0 0 10px rgba(255, 255, 255, 0.4);
-    color: white;  /* Changed to white for better contrast */
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);  /* Darker text shadow for white text */
-}
-
-.print-button:hover {
-    background-image: linear-gradient(135deg, #3ee6aa 0%, #25d366 100%);
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 
-        0 0 20px rgba(52, 211, 153, 0.5),
-        0 0 35px rgba(52, 211, 153, 0.3),
-        0 0 45px rgba(52, 211, 153, 0.2),
-        inset 0 0 15px rgba(255, 255, 255, 0.6);
-}
-
-.upload-left, .upload-right {
+    box-shadow: 0 0 20px rgba(137, 199, 235, 0.7),
+      0 0 35px rgba(137, 199, 235, 0.5), 0 0 45px rgba(137, 199, 235, 0.3),
+      inset 0 0 15px rgba(255, 255, 255, 0.6);
+  }
+  
+  .upload-left,
+    .upload-right {
     display: none;
-}
-
-.panel-buttons button {
+  }
+  
+  .panel-buttons button {
     margin: 0;
-}
-
-.pdf-container iframe {
+  }
+  
+  .pdf-container iframe {
     border: none;
     background-color: white;
-}
-
-.main-nav {
+  }
+  
+  .main-nav {
     position: relative;
     display: flex;
     justify-content: space-between;
@@ -583,119 +550,115 @@ button:hover {
     background-color: #fff5e6;
     padding: 0.25rem 2rem;
     height: 60px;
-}
-
-.nav-logo {
+  }
+  
+  .nav-logo {
     display: flex;
     flex-direction: row;
     align-items: flex-start; /* Changed from center to flex-start */
     gap: 8px;
     transform: translateY(-1px); /* Move up slightly */
-}
-
-.nav-logo-text {
+  }
+  
+  .nav-logo-text {
     font-size: 16px;
     color: #000000;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
     font-weight: 400;
     white-space: nowrap;
     margin-top: 2px; /* Adjust text position */
-    padding-top: 3px; 
-}
-
-.nav-logo-img {
+    padding-top: 3px;
+  }
+  
+  .nav-logo-img {
     height: 25px;
     width: auto;
-}
-
-.nav-center {
+  }
+  
+  .nav-center {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
     height: 100%;
     display: flex;
     align-items: center;
-}
-
-.nav-logo-large {
+  }
+  
+  .nav-logo-large {
     height: 85px;
     width: auto;
     object-fit: contain;
-}
-
-.nav-links {
+  }
+  
+  .nav-links {
     margin-left: auto;
     display: flex;
     gap: 2rem;
-}
-
-.title-content {
+  }
+  
+  .title-content {
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
     margin-bottom: 1px; /* Reduced bottom margin */
-}
-
-.title-logo {
+  }
+  
+  .title-logo {
     height: 35px;
     width: auto;
-}
-
-.title-text {
-    font-family: 'Poppins', sans-serif;
+  }
+  
+  .title-text {
+    font-family: "Poppins", sans-serif;
     font-weight: 300;
     font-size: 25px;
     color: black;
     margin-left: -15px; /* Create overlap with logo */
-}
-
-/* Remove these classes entirely */
-.bottom-panel {
+  }
+  
+  /* Remove these classes entirely */
+  .bottom-panel {
     display: none;
-}
-
-/* Reset body to default behavior */
-body {
+  }
+  
+  /* Reset body to default behavior */
+  body {
     min-height: 100vh;
     overflow-y: auto;
-}
-
-.panel-buttons {
+  }
+  
+  .panel-buttons {
     position: fixed;
     bottom: 20px;
     right: 20px;
     display: flex;
     gap: 10px;
-}
-
-.print-button {
-    padding: 12px 32px;
-    border: 2px solid rgba(0, 0, 0, 0.2);
-    border-radius: 25px;
-    background-color: #34d399;
-    background-image: linear-gradient(135deg, #34d399 0%, #22c55e 100%);
-    color: white;  /* Changed to white for better contrast */
-    font-size: 18px;
-    font-family: 'Poppins', sans-serif;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 
-        0 0 15px rgba(52, 211, 153, 0.3),
-        0 0 25px rgba(52, 211, 153, 0.2),
-        0 0 35px rgba(52, 211, 153, 0.1),
-        inset 0 0 10px rgba(255, 255, 255, 0.4);
-    position: relative;
-    overflow: hidden;
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);  /* Darker text shadow for white text */
-}
-
-.print-button:hover {
-    background-image: linear-gradient(135deg, #3ee6aa 0%, #25d366 100%);
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 
-        0 0 20px rgba(52, 211, 153, 0.5),
-        0 0 35px rgba(52, 211, 153, 0.3),
-        0 0 45px rgba(52, 211, 153, 0.2),
-        inset 0 0 15px rgba(255, 255, 255, 0.6);
-}
+  }
+  
+  .panel-buttons .print-button { /* Increased Specificity */
+    padding: 12px 32px !important;
+    border: 2px solid rgba(0, 0, 0, 0.15) !important;
+    border-radius: 25px !important;
+    background-color: #3b82f6 !important;
+    background-image: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%) !important;
+    color: black !important;
+    font-size: 18px !important;
+    font-family: "Poppins", sans-serif !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.3),
+      0 0 25px rgba(59, 130, 246, 0.2), 0 0 35px rgba(59, 130, 246, 0.1),
+      inset 0 0 10px rgba(255, 255, 255, 0.4) !important;
+    margin-top: 1rem !important; /*Added to keep consistent styling*/
+  }
+  
+  .panel-buttons .print-button:hover { /* Increased Specificity */
+    background-image: linear-gradient(135deg, #93c5fd 0%, #60a5fa 100%) !important;
+    transform: translateY(-2px) scale(1.02) !important;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5),
+      0 0 35px rgba(59, 130, 246, 0.3), 0 0 45px rgba(59, 130, 246, 0.2),
+      inset 0 0 15px rgba(255, 255, 255, 0.6) !important;
+  }
+  
+  
