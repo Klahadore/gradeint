@@ -1170,6 +1170,8 @@ def process_grade_and_create_pdfs(
             "questions": [],
             "score": next(s for s in student_scores if s['student_idx'] == student_idx)
         }
+
+        question_number = 1
         
         for page_idx, page_answers in enumerate(student):
             key_page_idx = page_idx % len(answer_choices)
@@ -1177,12 +1179,13 @@ def process_grade_and_create_pdfs(
             
             for q_idx, (student_ans, key_ans) in enumerate(zip(page_answers, key_page)):
                 question_feedback = {
-                    "question": q_idx + 1,
+                    "question": question_number,
                     "student_answer": student_ans,
                     "correct_answer": key_ans,
-                    "feedback": f"Question {q_idx + 1}: {'Correct!' if student_ans == key_ans else f'Incorrect. The correct answer is {key_ans}.'}"
+                    "feedback": f"Question {question_number}: {'Correct!' if student_ans == key_ans else f'Incorrect. The correct answer is {key_ans}.'}"
                 }
                 student_feedback["questions"].append(question_feedback)
+                question_number += 1
                     
         feedback["student_feedback"].append(student_feedback)
     
