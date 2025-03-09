@@ -1,0 +1,66 @@
+{
+  "summary": {
+    "total_students": 2,
+    "average_score": 33.33333333333333
+  },
+  "student_feedback": [
+    {
+      "student_number": 1,
+      "questions": [
+        {
+          "question": 1,
+          "student_answer": "B",
+          "correct_answer": "B",
+          "feedback": "Question 1: Correct!"
+        },
+        {
+          "question": 2,
+          "student_answer": "A",
+          "correct_answer": "A",
+          "feedback": "Question 2: Correct!"
+        },
+        {
+          "question": 3,
+          "student_answer": "A",
+          "correct_answer": "C",
+          "feedback": "Question 3: Incorrect. The correct answer is C."
+        }
+      ],
+      "score": {
+        "student_idx": 0,
+        "correct": 2,
+        "total": 3,
+        "percentage": 66.66666666666666
+      }
+    },
+    {
+      "student_number": 2,
+      "questions": [
+        {
+          "question": 1,
+          "student_answer": "C",
+          "correct_answer": "B",
+          "feedback": "Question 1: Incorrect. The correct answer is B."
+        },
+        {
+          "question": 2,
+          "student_answer": "B",
+          "correct_answer": "A",
+          "feedback": "Question 2: Incorrect. The correct answer is A."
+        },
+        {
+          "question": 3,
+          "student_answer": "A",
+          "correct_answer": "C",
+          "feedback": "Question 3: Incorrect. The correct answer is C."
+        }
+      ],
+      "score": {
+        "student_idx": 1,
+        "correct": 0,
+        "total": 3,
+        "percentage": 0.0
+      }
+    }
+  ]
+}
