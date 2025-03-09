@@ -28,3 +28,12 @@ Gradient takes in two files: an answer key PDF and a student work PDF. These fil
 
 # Note
 Feel free to use the two pdfs in the /example_pdfs folder and download them to your finder if you wish to use those files as the uploads.
+
+# Home Page
+![Image 3-9-25 at 3 50 AM](https://github.com/user-attachments/assets/911b7506-b7e2-4d19-b381-0b2c9509da12)
+
+# Loaing Page
+![Image 3-9-25 at 3 50 AM (1)](https://github.com/user-attachments/assets/41d04921-afd1-4317-9cd2-7e87e885feac)
+
+# Dashboard
+![Image 3-9-25 at 3 52 AM](https://github.com/user-attachments/assets/c8ee691e-28fc-4717-8d1a-1a73865fd137)
