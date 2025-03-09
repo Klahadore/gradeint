@@ -17,30 +17,29 @@ MODEL_ID = "my-first-project-6kwre/8"
 
 
 def process_raw_png(img: Image.Image) -> Image.Image:
-    # Convert image to black and white (binary)
-    # First convert to grayscale
-    grayscale_img = img.convert('L')
-
-    # Then convert to binary with a threshold (128 is a common middle value)
-    bw_img = grayscale_img.point(lambda x: 0 if x < 128 else 255, '1')
-
-    # Get dimensions
-    width, height = bw_img.size
+    # Get dimensions of original image
+    width, height = img.size
     aspect = width/height
 
     # Calculate new dimensions maintaining aspect ratio
     new_height = 1024
     new_width = int(1024 * aspect)
 
-    # Resize the black and white image
-    resized_img = bw_img.resize((new_width, new_height))
+    # Resize the image first
+    resized_img = img.resize((new_width, new_height))
+
+    # Convert to grayscale
+    grayscale_img = resized_img.convert('L')
+
+    # Convert to binary with a threshold (128 is a common middle value)
+    bw_img = grayscale_img.point(lambda x: 0 if x < 128 else 255, '1')
 
     # Create padded square image
     paste_x = (1024 - new_width) // 2
     paste_y = (1024 - new_height) // 2
 
     padded_img = Image.new('1', (1024, 1024), 1)  # 1 is white in binary mode
-    padded_img.paste(resized_img, (paste_x, paste_y))
+    padded_img.paste(bw_img, (paste_x, paste_y))
 
     return padded_img
 

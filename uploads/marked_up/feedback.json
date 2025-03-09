@@ -1,7 +1,7 @@
 {
   "summary": {
     "total_students": 2,
-    "average_score": 40.0
+    "average_score": 66.66666666666667
   },
   "student_feedback": [
     {
@@ -9,40 +9,46 @@
       "questions": [
         {
           "question": 1,
-          "student_answer": "B",
-          "correct_answer": "B",
+          "student_answer": "C",
+          "correct_answer": "C",
           "feedback": "Question 1: Correct!"
         },
         {
           "question": 2,
-          "student_answer": "A",
-          "correct_answer": "A",
+          "student_answer": "B",
+          "correct_answer": "B",
           "feedback": "Question 2: Correct!"
         },
         {
           "question": 3,
-          "student_answer": "A",
-          "correct_answer": "C",
-          "feedback": "Question 3: Incorrect. The correct answer is C."
+          "student_answer": "D",
+          "correct_answer": "D",
+          "feedback": "Question 3: Correct!"
         },
         {
           "question": 1,
-          "student_answer": "B",
-          "correct_answer": "A",
-          "feedback": "Question 1: Incorrect. The correct answer is A."
+          "student_answer": "D",
+          "correct_answer": "B",
+          "feedback": "Question 1: Incorrect. The correct answer is B."
         },
         {
           "question": 2,
-          "student_answer": "D",
-          "correct_answer": "D",
+          "student_answer": "C",
+          "correct_answer": "C",
           "feedback": "Question 2: Correct!"
+        },
+        {
+          "question": 3,
+          "student_answer": "B",
+          "correct_answer": "B",
+          "feedback": "Question 3: Correct!"
         }
       ],
       "score": {
         "student_idx": 0,
-        "correct": 3,
-        "total": 5,
-        "percentage": 60.0
+        "correct": 5,
+        "total": 6,
+        "percentage": 83.33333333333334
       }
     },
     {
@@ -50,40 +56,46 @@
       "questions": [
         {
           "question": 1,
-          "student_answer": "C",
+          "student_answer": "A",
+          "correct_answer": "C",
+          "feedback": "Question 1: Incorrect. The correct answer is C."
+        },
+        {
+          "question": 2,
+          "student_answer": "B",
+          "correct_answer": "B",
+          "feedback": "Question 2: Correct!"
+        },
+        {
+          "question": 3,
+          "student_answer": "D",
+          "correct_answer": "D",
+          "feedback": "Question 3: Correct!"
+        },
+        {
+          "question": 1,
+          "student_answer": "D",
           "correct_answer": "B",
           "feedback": "Question 1: Incorrect. The correct answer is B."
         },
         {
           "question": 2,
-          "student_answer": "B",
-          "correct_answer": "A",
-          "feedback": "Question 2: Incorrect. The correct answer is A."
+          "student_answer": "A",
+          "correct_answer": "C",
+          "feedback": "Question 2: Incorrect. The correct answer is C."
         },
         {
           "question": 3,
-          "student_answer": "A",
-          "correct_answer": "C",
-          "feedback": "Question 3: Incorrect. The correct answer is C."
-        },
-        {
-          "question": 1,
-          "student_answer": "A",
-          "correct_answer": "A",
-          "feedback": "Question 1: Correct!"
-        },
-        {
-          "question": 2,
-          "student_answer": "C",
-          "correct_answer": "D",
-          "feedback": "Question 2: Incorrect. The correct answer is D."
+          "student_answer": "B",
+          "correct_answer": "B",
+          "feedback": "Question 3: Correct!"
         }
       ],
       "score": {
         "student_idx": 1,
-        "correct": 1,
-        "total": 5,
-        "percentage": 20.0
+        "correct": 3,
+        "total": 6,
+        "percentage": 50.0
       }
     }
   ]
